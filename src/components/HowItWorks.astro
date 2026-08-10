@@ -1,0 +1,76 @@
+---
+import { HOW_IT_WORKS } from '../data/content';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import FeatureCard from './ui/FeatureCard.astro';
+
+/**
+ * „Jak to działa” — trzy kroki procesu. Na desktopie łączy je cienka
+ * linia prowadząca, która podkreśla sekwencję.
+ */
+---
+
+<Section id="jak-to-dziala" labelledby="jak-to-dziala-title">
+  <SectionHeading
+    id="jak-to-dziala-title"
+    title={HOW_IT_WORKS.title}
+    subtitle={HOW_IT_WORKS.subtitle}
+  />
+
+  <ol class="steps grid-cards">
+    {
+      HOW_IT_WORKS.steps.map((step, index) => (
+        <li class="steps__item">
+          <FeatureCard
+            icon={step.icon}
+            title={step.title}
+            body={step.body}
+            number={step.number}
+            delay={index * 120}
+          />
+        </li>
+      ))
+    }
+  </ol>
+</Section>
+
+<style>
+  .steps {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps__item {
+    display: flex;
+  }
+
+  .steps__item > :global(.card) {
+    width: 100%;
+  }
+
+  /* Linia prowadząca między krokami — tylko tam, gdzie karty stoją w rzędzie */
+  @media (min-width: 58rem) {
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 3.4rem;
+      left: 12%;
+      right: 12%;
+      height: 1px;
+      background: repeating-linear-gradient(
+        90deg,
+        var(--c-line-strong) 0 6px,
+        transparent 6px 14px
+      );
+      z-index: 0;
+    }
+
+    .steps__item {
+      position: relative;
+      z-index: 1;
+    }
+  }
+</style>

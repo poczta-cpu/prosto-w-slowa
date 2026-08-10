@@ -1,0 +1,47 @@
+---
+/**
+ * Wrapper sekcji: nadaje stały rytm pionowy, wariant tła oraz
+ * powiązanie nagłówka z sekcją przez aria-labelledby.
+ */
+interface Props {
+  id: string;
+  /** Wariant tła — naprzemienne sekcje budują rytm strony. */
+  tone?: 'base' | 'alt' | 'ink';
+  class?: string;
+  labelledby?: string;
+  [key: string]: unknown;
+}
+
+const { id, tone = 'base', class: className, labelledby, ...rest } = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={['section', `section--${tone}`, className]}
+  aria-labelledby={labelledby}
+  {...rest}
+>
+  <div class="container">
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section {
+    position: relative;
+    padding-block: var(--section-padding-y);
+  }
+
+  .section--base {
+    background-color: var(--c-bg);
+  }
+
+  .section--alt {
+    background-color: var(--c-bg-alt);
+  }
+
+  .section--ink {
+    background-color: var(--c-ink);
+    color: var(--c-on-ink);
+  }
+</style>

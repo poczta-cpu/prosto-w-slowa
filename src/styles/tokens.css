@@ -1,0 +1,113 @@
+/**
+ * Design tokeny — jedyne miejsce, w którym zdefiniowane są kolory,
+ * skala typograficzna, odstępy i parametry animacji.
+ *
+ * Paleta opiera się na dwóch kolorach bazowych ze strony źródłowej:
+ *   #522B29 — tekst (ciepły, ciemny brąz)
+ *   #F5F1E9 — tło (kremowy)
+ * Pozostałe wartości to ich pochodne (rozjaśnienia / przyciemnienia)
+ * plus jeden oszczędnie używany akcent terakotowy.
+ */
+
+:root {
+  /* ── Kolory bazowe ──────────────────────────────────────────────── */
+  --c-ink: #522b29;
+  --c-cream: #f5f1e9;
+
+  /* Pochodne tekstu — kontrast wobec --c-cream:
+     ink 10.6:1 · muted 5.6:1 (AA dla tekstu) · subtle 3.4:1 (tylko duży tekst/dekoracje) */
+  --c-ink-muted: #6f4f4a;
+  --c-ink-subtle: #93736c;
+
+  /* Powierzchnie */
+  --c-bg: var(--c-cream);
+  --c-bg-alt: #efe9dd;
+  --c-surface: #fbf8f2;
+  --c-surface-raised: #ffffff;
+
+  /* Linie i obrysy */
+  --c-line: #e2d8c6;
+  --c-line-strong: #d2c4ac;
+
+  /* Akcent — terakota z grafik źródłowych. Używany oszczędnie:
+     ikony, gwiazdki, numery kroków, podkreślenia. */
+  --c-accent: #b9663d;
+  --c-accent-soft: #f0ddce;
+  --c-accent-tint: #f8ece2;
+
+  /* Stany */
+  --c-focus: #b9663d;
+  --c-error: #a53f2b;
+  --c-success: #4c6b45;
+  --c-on-ink: #f7f3ec;
+
+  /* ── Typografia ─────────────────────────────────────────────────── */
+  --font-display: 'Fraunces Variable', 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Helvetica, Arial, sans-serif;
+
+  /* Skala płynna — min dla ~360 px, max dla ~1440 px */
+  --fs-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+  --fs-sm: clamp(0.875rem, 0.85rem + 0.12vw, 0.9375rem);
+  --fs-base: clamp(1rem, 0.96rem + 0.2vw, 1.0625rem);
+  --fs-md: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --fs-lg: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+  --fs-xl: clamp(1.375rem, 1.25rem + 0.6vw, 1.75rem);
+  --fs-2xl: clamp(1.75rem, 1.5rem + 1.2vw, 2.5rem);
+  --fs-3xl: clamp(2.125rem, 1.7rem + 2vw, 3.5rem);
+  --fs-4xl: clamp(2.5rem, 1.9rem + 3vw, 4.5rem);
+
+  --lh-tight: 1.1;
+  --lh-snug: 1.25;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.7;
+
+  --ls-tight: -0.02em;
+  --ls-normal: 0;
+  --ls-wide: 0.04em;
+  --ls-wider: 0.14em;
+
+  /* Maksymalna szerokość bloku tekstowego — czytelność ~60–70 znaków */
+  --measure: 62ch;
+  --measure-narrow: 46ch;
+
+  /* ── Odstępy ────────────────────────────────────────────────────── */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Rytm pionowy sekcji — skaluje się z viewportem */
+  --section-padding-y: clamp(4rem, 3rem + 6vw, 8.5rem);
+  --section-gap: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+
+  /* ── Layout ─────────────────────────────────────────────────────── */
+  --container-max: 76rem;
+  --container-narrow: 58rem;
+  --container-pad: clamp(1.25rem, 0.9rem + 2.2vw, 3rem);
+  --header-height: 4.5rem;
+
+  /* ── Kształty i cienie ──────────────────────────────────────────── */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(82, 43, 41, 0.05), 0 2px 8px rgba(82, 43, 41, 0.04);
+  --shadow-md: 0 2px 4px rgba(82, 43, 41, 0.05), 0 8px 24px rgba(82, 43, 41, 0.07);
+  --shadow-lg: 0 4px 8px rgba(82, 43, 41, 0.05), 0 18px 44px rgba(82, 43, 41, 0.1);
+
+  /* ── Animacje ───────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-soft: cubic-bezier(0.33, 0, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 480ms;
+  --dur-reveal: 760ms;
+}

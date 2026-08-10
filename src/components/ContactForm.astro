@@ -1,0 +1,313 @@
+---
+import Button from './ui/Button.astro';
+
+/**
+ * Formularz kontaktowy — wyłącznie frontend.
+ *
+ * `action` jest celowo puste: wysyłkę podłącza się przez zmienną
+ * `FORM_ENDPOINT` w `src/scripts/form.ts` (np. Formspree, Web3Forms,
+ * własne API). Dopóki endpoint nie jest ustawiony, formularz waliduje
+ * dane i wyświetla komunikat, że wysyłka nie została jeszcze podpięta.
+ */
+
+const FIELDS = [
+  {
+    name: 'name',
+    label: 'Imię',
+    type: 'text',
+    autocomplete: 'given-name',
+    placeholder: 'Jak mamy się do Ciebie zwracać?',
+    required: true,
+  },
+  {
+    name: 'email',
+    label: 'Adres e-mail',
+    type: 'email',
+    autocomplete: 'email',
+    placeholder: 'twoj@email.pl',
+    required: true,
+  },
+  {
+    name: 'phone',
+    label: 'Telefon',
+    type: 'tel',
+    autocomplete: 'tel',
+    placeholder: 'Opcjonalnie',
+    required: false,
+  },
+] as const;
+---
+
+<form class="form" data-contact-form novalidate>
+  <div class="form__grid">
+    {
+      FIELDS.map((field) => (
+        <p class="field">
+          <label class="field__label" for={`field-${field.name}`}>
+            {field.label}
+            {field.required ? (
+              <span class="field__required" aria-hidden="true">
+                *
+              </span>
+            ) : (
+              <span class="field__optional">(opcjonalnie)</span>
+            )}
+          </label>
+          <input
+            class="field__input"
+            id={`field-${field.name}`}
+            name={field.name}
+            type={field.type}
+            autocomplete={field.autocomplete}
+            placeholder={field.placeholder}
+            required={field.required}
+            aria-describedby={`error-${field.name}`}
+          />
+          <span class="field__error" id={`error-${field.name}`} role="alert" />
+        </p>
+      ))
+    }
+
+    <p class="field field--full">
+      <label class="field__label" for="field-message">
+        Wiadomość
+        <span class="field__required" aria-hidden="true">*</span>
+      </label>
+      <textarea
+        class="field__input field__input--area"
+        id="field-message"
+        name="message"
+        rows="5"
+        required
+        minlength="10"
+        placeholder="Napisz kilka słów o tym, z czym chcesz przyjść. Nie musisz wchodzić w szczegóły."
+        aria-describedby="error-message"></textarea>
+      <span class="field__error" id="error-message" role="alert"></span>
+    </p>
+
+    <p class="field field--full field--check">
+      <input class="field__checkbox" id="field-consent" name="consent" type="checkbox" required
+        aria-describedby="error-consent" />
+      <label class="field__consent" for="field-consent">
+        Wyrażam zgodę na przetwarzanie moich danych w celu odpowiedzi na wiadomość.
+        <span class="field__required" aria-hidden="true">*</span>
+      </label>
+      <span class="field__error" id="error-consent" role="alert"></span>
+    </p>
+  </div>
+
+  {/* Pułapka na boty — pole ukryte przed użytkownikiem i czytnikami ekranu */}
+  <div class="form__honeypot" aria-hidden="true">
+    <label for="field-company">Nie wypełniaj tego pola</label>
+    <input id="field-company" name="company" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="form__footer">
+    <Button type="submit" variant="primary" size="lg" class="form__submit" data-submit>
+      <span data-submit-label>Wyślij wiadomość</span>
+    </Button>
+    <p class="form__note">Pola oznaczone <span aria-hidden="true">*</span> są wymagane.</p>
+  </div>
+
+  <p class="form__status" data-form-status role="status" aria-live="polite"></p>
+</form>
+
+<script>
+  import { initContactForm } from '../scripts/form';
+  initContactForm();
+</script>
+
+<style>
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .form__grid {
+    display: grid;
+    gap: var(--space-sm) var(--space-md);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 34rem) {
+    .form__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ── Pola ───────────────────────────────────────────────────────── */
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin: 0;
+  }
+
+  .field__label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+  }
+
+  .field__required {
+    color: var(--c-accent);
+  }
+
+  .field__optional {
+    color: var(--c-ink-subtle);
+    font-size: var(--fs-xs);
+    font-weight: 400;
+  }
+
+  .field__input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    color: var(--c-ink);
+    background-color: var(--c-surface-raised);
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-md);
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-fast) var(--ease-out),
+      background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .field__input::placeholder {
+    color: var(--c-ink-subtle);
+  }
+
+  .field__input:hover {
+    border-color: var(--c-ink-subtle);
+  }
+
+  .field__input:focus {
+    outline: none;
+    border-color: var(--c-accent);
+    box-shadow: 0 0 0 3px rgb(185 102 61 / 0.16);
+  }
+
+  .field__input--area {
+    resize: vertical;
+    min-height: 8rem;
+    font-family: inherit;
+  }
+
+  .field__input[aria-invalid='true'] {
+    border-color: var(--c-error);
+    background-color: rgb(165 63 43 / 0.03);
+  }
+
+  .field__error {
+    min-height: 0;
+    color: var(--c-error);
+    font-size: var(--fs-xs);
+    line-height: 1.4;
+  }
+
+  .field__error:not(:empty) {
+    margin-top: -0.1rem;
+  }
+
+  /* ── Zgoda ──────────────────────────────────────────────────────── */
+
+  .field--check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.2rem 0.65rem;
+    align-items: start;
+    margin-top: var(--space-3xs);
+  }
+
+  .field__checkbox {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0.2rem 0 0;
+    accent-color: var(--c-ink);
+    cursor: pointer;
+  }
+
+  .field__consent {
+    font-size: var(--fs-xs);
+    line-height: var(--lh-normal);
+    color: var(--c-ink-muted);
+    cursor: pointer;
+  }
+
+  .field--check .field__error {
+    grid-column: 1 / -1;
+  }
+
+  /* ── Honeypot ───────────────────────────────────────────────────── */
+
+  .form__honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* ── Stopka formularza ──────────────────────────────────────────── */
+
+  .form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-sm) var(--space-md);
+  }
+
+  .form__submit[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .form__note {
+    margin: 0;
+    color: var(--c-ink-subtle);
+    font-size: var(--fs-xs);
+  }
+
+  .form__status {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+  }
+
+  .form__status:empty {
+    display: none;
+  }
+
+  .form__status {
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+  }
+
+  .form__status[data-state='success'] {
+    color: var(--c-success);
+    background-color: rgb(76 107 69 / 0.08);
+    border-color: rgb(76 107 69 / 0.25);
+  }
+
+  .form__status[data-state='error'] {
+    color: var(--c-error);
+    background-color: rgb(165 63 43 / 0.06);
+    border-color: rgb(165 63 43 / 0.25);
+  }
+
+  .form__status[data-state='info'] {
+    color: var(--c-ink-muted);
+    background-color: var(--c-accent-tint);
+    border-color: var(--c-accent-soft);
+  }
+</style>

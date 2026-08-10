@@ -1,0 +1,271 @@
+---
+import { SITE, NAV_LINKS, CTA } from '../data/site';
+import Button from './ui/Button.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * Sticky nagłówek. Po przewinięciu zyskuje tło i cień; na wąskich
+ * ekranach nawigacja zwija się do panelu sterowanego przyciskiem.
+ * Aktywna sekcja podświetlana jest przez IntersectionObserver.
+ */
+---
+
+<header class="header" data-header>
+  <div class="header__inner container">
+    <a class="brand" href="#top" aria-label={`${SITE.name} — początek strony`}>
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span class="brand__name">{SITE.name}</span>
+    </a>
+
+    <nav class="nav" aria-label="Nawigacja główna">
+      <button
+        class="nav__toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        data-nav-toggle
+      >
+        <span class="nav__toggle-icon" data-nav-icon="menu"><Icon name="menu" size={22} /></span>
+        <span class="nav__toggle-icon" data-nav-icon="close"><Icon name="close" size={22} /></span>
+        <span class="visually-hidden">Menu</span>
+      </button>
+
+      <div class="nav__panel" id="nav-menu" data-nav-panel>
+        <ul class="nav__list">
+          {
+            NAV_LINKS.map((link) => (
+              <li>
+                <a class="nav__link" href={link.href} data-nav-link>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <Button href={CTA.primary.href} variant="primary" size="md" class="nav__cta">
+          {CTA.primary.label}
+        </Button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  import { initNav } from '../scripts/nav';
+  initNav();
+</script>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    transition:
+      background-color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+
+  .header.is-scrolled {
+    background-color: rgb(245 241 233 / 0.86);
+    backdrop-filter: blur(12px) saturate(1.1);
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    border-bottom-color: var(--c-line);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    min-height: var(--header-height);
+  }
+
+  /* ── Logo ───────────────────────────────────────────────────────── */
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    font-variation-settings: 'SOFT' 40, 'opsz' 24;
+  }
+
+  .brand__mark {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background-color: var(--c-accent);
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .brand:hover {
+    color: var(--c-ink);
+  }
+
+  .brand:hover .brand__mark {
+    transform: scale(1.35);
+  }
+
+  /* ── Nawigacja ──────────────────────────────────────────────────── */
+
+  .nav__toggle {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: var(--radius-md);
+    color: var(--c-ink);
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  .nav__toggle:hover {
+    background-color: rgb(82 43 41 / 0.06);
+  }
+
+  .nav__toggle-icon {
+    grid-area: 1 / 1;
+    display: grid;
+    transition:
+      opacity var(--dur-fast) var(--ease-out),
+      transform var(--dur-base) var(--ease-out);
+  }
+
+  [data-nav-icon='close'] {
+    opacity: 0;
+    transform: rotate(-45deg) scale(0.7);
+  }
+
+  .nav__toggle[aria-expanded='true'] [data-nav-icon='menu'] {
+    opacity: 0;
+    transform: rotate(45deg) scale(0.7);
+  }
+
+  .nav__toggle[aria-expanded='true'] [data-nav-icon='close'] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.75rem, 0.3rem + 1.4vw, 1.9rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav__link {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.35rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--c-ink-muted);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1.5px;
+    border-radius: 2px;
+    background-color: var(--c-accent);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link.is-active {
+    color: var(--c-ink);
+  }
+
+  .nav__link:hover::after,
+  .nav__link.is-active::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  /* ── Desktop ────────────────────────────────────────────────────── */
+
+  @media (min-width: 62rem) {
+    .nav__toggle {
+      display: none;
+    }
+
+    .nav__panel {
+      display: flex;
+      align-items: center;
+      gap: clamp(1rem, 0.4rem + 2vw, 2.25rem);
+    }
+  }
+
+  /* ── Mobile ─────────────────────────────────────────────────────── */
+
+  @media (max-width: 61.999rem) {
+    .nav__panel {
+      position: fixed;
+      inset: var(--header-height) 0 auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-md);
+      padding: var(--space-lg) var(--container-pad) var(--space-xl);
+      background-color: var(--c-bg);
+      border-bottom: 1px solid var(--c-line);
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(-0.75rem);
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity var(--dur-base) var(--ease-out),
+        transform var(--dur-base) var(--ease-out),
+        visibility var(--dur-base);
+    }
+
+    .nav__panel.is-open {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .nav__list li + li {
+      border-top: 1px solid var(--c-line);
+    }
+
+    .nav__link {
+      display: block;
+      padding-block: var(--space-xs);
+      font-size: var(--fs-md);
+    }
+
+    .nav__link::after {
+      display: none;
+    }
+
+    .nav__cta {
+      width: 100%;
+    }
+  }
+</style>

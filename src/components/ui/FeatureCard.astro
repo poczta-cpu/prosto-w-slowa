@@ -1,0 +1,113 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Karta z ikoną, tytułem i opisem — używana w sekcjach „O nas”,
+ * „Jak to działa” i „Nasza filozofia”.
+ */
+interface Props {
+  icon: string;
+  title: string;
+  body: string;
+  /** Opcjonalny numer kroku wyświetlany nad ikoną. */
+  number?: string;
+  /** Opóźnienie animacji pojawiania się — buduje efekt kaskady. */
+  delay?: number;
+}
+
+const { icon, title, body, number, delay = 0 } = Astro.props;
+---
+
+<article class="card" data-reveal style={`--reveal-delay: ${delay}ms`}>
+  <div class="card__top">
+    <span class="card__icon" aria-hidden="true">
+      <Icon name={icon as never} size={22} />
+    </span>
+    {number && <span class="card__number" aria-hidden="true">{number}</span>}
+  </div>
+  <h3 class="card__title">{title}</h3>
+  <p class="card__body">{body}</p>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    height: 100%;
+    padding: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--c-line-strong);
+  }
+
+  .card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .card__icon {
+    display: grid;
+    place-items: center;
+    width: 2.875rem;
+    height: 2.875rem;
+    color: var(--c-accent);
+    background-color: var(--c-accent-tint);
+    border-radius: var(--radius-md);
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out);
+  }
+
+  .card:hover .card__icon {
+    transform: scale(1.06) rotate(-3deg);
+    background-color: var(--c-accent-soft);
+  }
+
+  .card__number {
+    font-family: var(--font-display);
+    font-size: var(--fs-2xl);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--c-line-strong);
+    letter-spacing: var(--ls-tight);
+    font-variation-settings: 'SOFT' 40, 'opsz' 96;
+    transition: color var(--dur-base) var(--ease-out);
+  }
+
+  .card:hover .card__number {
+    color: var(--c-accent-soft);
+  }
+
+  .card__title {
+    margin: 0;
+  }
+
+  .card__body {
+    margin: 0;
+    color: var(--c-ink-muted);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card:hover,
+    .card:hover .card__icon {
+      transform: none;
+    }
+  }
+</style>

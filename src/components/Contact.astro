@@ -1,0 +1,171 @@
+---
+import { Image } from 'astro:assets';
+import contactImage from '../assets/wejscie-drzwi.png';
+import { CONTACT_SECTION } from '../data/content';
+import { CONTACT } from '../data/site';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import ContactForm from './ContactForm.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * „Kontakt” — dane teleadresowe obok formularza.
+ * Telefon i e-mail stają się klikalne dopiero po uzupełnieniu
+ * `phoneHref` / `emailHref` w `src/data/site.ts`.
+ */
+
+const DETAILS = [
+  { icon: 'location', label: 'Adres', value: CONTACT.address, href: null },
+  {
+    icon: 'phone',
+    label: 'Telefon',
+    value: CONTACT.phone,
+    href: CONTACT.phoneHref ? `tel:${CONTACT.phoneHref}` : null,
+  },
+  {
+    icon: 'mail',
+    label: 'Email',
+    value: CONTACT.email,
+    href: CONTACT.emailHref ? `mailto:${CONTACT.emailHref}` : null,
+  },
+  { icon: 'clock', label: 'Godziny otwarcia', value: CONTACT.hours, href: null },
+] as const;
+---
+
+<Section id="kontakt" labelledby="kontakt-title">
+  <SectionHeading
+    id="kontakt-title"
+    title={CONTACT_SECTION.title}
+    subtitle={CONTACT_SECTION.subtitle}
+  />
+
+  <div class="split split--wide-text contact">
+    <div class="contact__form-wrap" data-reveal>
+      <p class="contact__note">{CONTACT_SECTION.formNote}</p>
+      <ContactForm />
+    </div>
+
+    <aside class="contact__aside" data-reveal="left" style="--reveal-delay: 120ms">
+      <div class="contact__media">
+        <Image
+          src={contactImage}
+          alt={CONTACT_SECTION.imageAlt}
+          widths={[420, 640, 900]}
+          sizes="(min-width: 56rem) 34vw, 92vw"
+          loading="lazy"
+          class="contact__image"
+        />
+      </div>
+
+      <dl class="details">
+        {
+          DETAILS.map((detail) => (
+            <div class="detail">
+              <dt class="detail__label">
+                <span class="detail__icon" aria-hidden="true">
+                  <Icon name={detail.icon as never} size={18} />
+                </span>
+                {detail.label}
+              </dt>
+              <dd class="detail__value">
+                {detail.href ? <a href={detail.href}>{detail.value}</a> : detail.value}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </aside>
+  </div>
+</Section>
+
+<style>
+  .contact__form-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: clamp(1.5rem, 1.2rem + 1.6vw, 2.75rem);
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .contact__note {
+    max-width: var(--measure);
+    margin: 0;
+    color: var(--c-ink-muted);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+
+  .contact__aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .contact__media {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .contact__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+
+  /* ── Dane kontaktowe ────────────────────────────────────────────── */
+
+  .details {
+    display: grid;
+    gap: var(--space-sm);
+    margin: 0;
+    grid-template-columns: repeat(auto-fit, minmax(min(12rem, 100%), 1fr));
+  }
+
+  .detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: var(--space-xs) 0;
+    border-top: 1px solid var(--c-line);
+  }
+
+  .detail__label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--c-ink-subtle);
+  }
+
+  .detail__icon {
+    display: grid;
+    place-items: center;
+    color: var(--c-accent);
+  }
+
+  .detail__value {
+    margin: 0;
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    color: var(--c-ink);
+    overflow-wrap: anywhere;
+  }
+
+  .detail__value a {
+    text-decoration-color: var(--c-line-strong);
+  }
+
+  @media (min-width: 56rem) {
+    .details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

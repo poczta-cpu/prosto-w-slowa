@@ -1,0 +1,95 @@
+---
+/**
+ * Nagłówek sekcji w formacie ze strony źródłowej: „Tytuł: podtytuł”.
+ * Tytuł jest wyróżniony, podtytuł stanowi jego dopowiedzenie.
+ */
+interface Props {
+  id: string;
+  title: string;
+  subtitle: string;
+  align?: 'start' | 'center';
+  /** Poziom nagłówka — domyślnie h2, bo H1 należy do sekcji hero. */
+  as?: 'h2' | 'h3';
+  class?: string;
+}
+
+const { id, title, subtitle, align = 'center', as: Tag = 'h2', class: className } = Astro.props;
+---
+
+<div class:list={['heading', `heading--${align}`, className]} data-reveal>
+  <Tag id={id} class="heading__title">
+    <span class="heading__lead">{title}</span>
+    <span class="heading__sub">{subtitle}</span>
+  </Tag>
+  <span class="heading__rule" aria-hidden="true"></span>
+</div>
+
+<style>
+  .heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin-bottom: var(--section-gap);
+  }
+
+  .heading--center {
+    align-items: center;
+    text-align: center;
+  }
+
+  .heading--start {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .heading__title {
+    max-width: 22ch;
+    margin: 0;
+  }
+
+  .heading__lead {
+    display: block;
+  }
+
+  .heading__sub {
+    display: block;
+    margin-top: 0.15em;
+    font-size: 0.62em;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--c-ink-muted);
+    letter-spacing: 0;
+    font-variation-settings: 'SOFT' 60, 'WONK' 1, 'opsz' 48;
+  }
+
+  .heading__rule {
+    display: block;
+    width: 3.5rem;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--c-accent), var(--c-accent-soft));
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform var(--dur-slow) var(--ease-soft) 240ms;
+  }
+
+  .heading--center .heading__rule {
+    transform-origin: center;
+  }
+
+  .heading.is-revealed .heading__rule {
+    transform: scaleX(1);
+  }
+
+  /* Sekcja na ciemnym tle */
+  :global(.section--ink) .heading__sub {
+    color: rgb(247 243 236 / 0.72);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .heading__rule {
+      transform: scaleX(1);
+      transition: none;
+    }
+  }
+</style>

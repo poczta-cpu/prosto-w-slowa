@@ -1,0 +1,160 @@
+---
+import { FAQ } from '../data/content';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * FAQ zbudowane na <details>/<summary> — działa bez JavaScriptu,
+ * jest dostępne z klawiatury i przeszukiwalne przez Ctrl+F w nowych
+ * przeglądarkach. Płynne rozwijanie realizuje animacja grid-template-rows.
+ */
+---
+
+<Section id="faq" tone="alt" labelledby="faq-title">
+  <SectionHeading id="faq-title" title={FAQ.title} subtitle={FAQ.subtitle} />
+
+  <div class="faq container--narrow">
+    {
+      FAQ.items.map((item, index) => (
+        <details class="faq__item" name="faq" data-reveal style={`--reveal-delay: ${index * 90}ms`}>
+          <summary class="faq__question">
+            <span class="faq__question-text">{item.question}</span>
+            <span class="faq__marker" aria-hidden="true">
+              <Icon name="chevron" size={20} />
+            </span>
+          </summary>
+          <div class="faq__answer-wrap">
+            <div class="faq__answer-inner">
+              <p class="faq__answer">{item.answer}</p>
+            </div>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</Section>
+
+<style>
+  .faq {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  .faq__item {
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition:
+      border-color var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+
+  .faq__item:hover {
+    border-color: var(--c-line-strong);
+  }
+
+  .faq__item[open] {
+    border-color: var(--c-accent-soft);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .faq__question {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: clamp(1rem, 0.9rem + 0.6vw, 1.4rem) clamp(1.1rem, 1rem + 0.8vw, 1.75rem);
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--fs-md);
+    font-weight: 600;
+    line-height: var(--lh-snug);
+    letter-spacing: -0.01em;
+    transition: background-color var(--dur-fast) var(--ease-out);
+  }
+
+  /* Usunięcie domyślnego trójkąta w Safari i Chrome */
+  .faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__question:hover {
+    background-color: rgb(82 43 41 / 0.03);
+  }
+
+  .faq__question:focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: -3px;
+  }
+
+  .faq__marker {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    color: var(--c-accent);
+    background-color: var(--c-accent-tint);
+    border-radius: 50%;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  .faq__item[open] .faq__marker {
+    transform: rotate(180deg);
+  }
+
+  /* Płynne rozwijanie: animowana wysokość wiersza siatki (0fr → 1fr) */
+  .faq__answer-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dur-base) var(--ease-soft);
+  }
+
+  .faq__item[open] .faq__answer-wrap {
+    grid-template-rows: 1fr;
+  }
+
+  .faq__answer-inner {
+    overflow: hidden;
+  }
+
+  .faq__answer {
+    max-width: var(--measure);
+    margin: 0;
+    padding: 0 clamp(1.1rem, 1rem + 0.8vw, 1.75rem) clamp(1.1rem, 1rem + 0.6vw, 1.5rem);
+    color: var(--c-ink-muted);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq__answer-wrap {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /*
+   * Atrybut `name` na <details> (akordeon — jedna odpowiedź naraz) nie jest
+   * jeszcze wspierany wszędzie. Poniższy fallback zamyka pozostałe pozycje
+   * w przeglądarkach bez tego wsparcia; tam, gdzie działa natywnie, jest
+   * całkowicie pomijany.
+   */
+  const supportsAccordion = 'name' in HTMLDetailsElement.prototype;
+
+  if (!supportsAccordion) {
+    const items = Array.from(document.querySelectorAll<HTMLDetailsElement>('.faq__item'));
+    items.forEach((item) => {
+      item.addEventListener('toggle', () => {
+        if (!item.open) return;
+        items.filter((other) => other !== item && other.open).forEach((other) => (other.open = false));
+      });
+    });
+  }
+</script>

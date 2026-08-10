@@ -1,0 +1,32 @@
+# budowanie
+dist/
+.astro/
+
+# zależności
+node_modules/
+
+# logi
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# środowisko
+.env
+.env.production
+.env.local
+
+# systemowe
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+
+# notatki robocze — repozytorium jest publiczne, te pliki zostają lokalnie
+CLAUDE.md
+README.md
+prompt.txt
+*.notatki.md

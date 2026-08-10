@@ -1,0 +1,100 @@
+---
+import '../styles/global.css';
+import { SITE, CONTACT } from '../data/site';
+import { FAQ } from '../data/content';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = SITE.title, description = SITE.description } = Astro.props;
+
+/* Pliki z `public/` trafiają pod `base`, a na GitHub Pages strona stoi
+   w podkatalogu. `withBase` skleja ścieżkę niezależnie od tego, czy `base`
+   to '/' (własna domena), czy '/prosto-w-slowa'. */
+const withBase = (path: string) =>
+  `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
+const ogImage = new URL(withBase('og-image.png'), Astro.site ?? Astro.url).href;
+
+/* Schema.org — LocalBusiness opisuje usługę, FAQPage odwzorowuje sekcję FAQ.
+   Pola z placeholderami są pomijane, żeby nie publikować pustych danych. */
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: SITE.name,
+  description: SITE.description,
+  url: canonical,
+  image: ogImage,
+  ...(CONTACT.phoneHref ? { telephone: CONTACT.phoneHref } : {}),
+  ...(CONTACT.emailHref ? { email: CONTACT.emailHref } : {}),
+  areaServed: 'PL',
+  knowsLanguage: 'pl',
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+};
+---
+
+<!doctype html>
+<html lang={SITE.lang} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#F5F1E9" />
+
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
+    <link rel="manifest" href={withBase('site.webmanifest')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={SITE.title} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script is:inline set:html={JSON.stringify(businessSchema)} type="application/ld+json" />
+    <script is:inline set:html={JSON.stringify(faqSchema)} type="application/ld+json" />
+
+    {/* Ustawiane przed renderem, aby uniknąć mignięcia ukrytych sekcji, gdy JS jest wyłączony. */}
+    <script is:inline>
+      document.documentElement.classList.remove('no-js');
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Przejdź do treści</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,169 @@
+---
+/**
+ * Przycisk / link-przycisk. Renderuje <a> gdy podano `href`, w innym
+ * wypadku <button>, dzięki czemu semantyka zawsze pasuje do zachowania.
+ */
+interface Props {
+  href?: string;
+  /** `inverse*` to odpowiedniki primary/secondary na ciemnym tle. */
+  variant?: 'primary' | 'secondary' | 'ghost' | 'inverse' | 'inverse-outline';
+  size?: 'md' | 'lg';
+  type?: 'button' | 'submit';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  type = 'button',
+  class: className,
+  ...rest
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const tagProps = href ? { href } : { type };
+---
+
+<Tag class:list={['btn', `btn--${variant}`, `btn--${size}`, className]} {...tagProps} {...rest}>
+  <span class="btn__label"><slot /></span>
+</Tag>
+
+<style>
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2xs);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-body);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid transparent;
+    isolation: isolate;
+    overflow: hidden;
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      background-color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out),
+      color var(--dur-base) var(--ease-out);
+  }
+
+  /* Rozmiary — min-height 44 px spełnia wytyczne dotykowe */
+  .btn--md {
+    min-height: 2.875rem;
+    padding: 0.75rem 1.5rem;
+    font-size: var(--fs-sm);
+  }
+
+  .btn--lg {
+    min-height: 3.375rem;
+    padding: 0.95rem 2rem;
+    font-size: var(--fs-base);
+  }
+
+  /* Delikatny rozbłysk przesuwający się przy najechaniu */
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(115deg, transparent 30%, rgb(255 255 255 / 0.18) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform var(--dur-slow) var(--ease-soft);
+  }
+
+  .btn:hover::before {
+    transform: translateX(120%);
+  }
+
+  .btn__label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+  }
+
+  /* ── Warianty ───────────────────────────────────────────────────── */
+
+  .btn--primary {
+    background-color: var(--c-ink);
+    color: var(--c-on-ink);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn--primary:hover {
+    color: var(--c-on-ink);
+    background-color: #43221f;
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .btn--secondary {
+    background-color: transparent;
+    color: var(--c-ink);
+    border-color: var(--c-line-strong);
+  }
+
+  .btn--secondary:hover {
+    color: var(--c-ink);
+    border-color: var(--c-ink);
+    background-color: rgb(82 43 41 / 0.04);
+    transform: translateY(-2px);
+  }
+
+  .btn--inverse {
+    background-color: var(--c-on-ink);
+    color: var(--c-ink);
+  }
+
+  .btn--inverse:hover {
+    background-color: #ffffff;
+    color: var(--c-ink);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 0.18);
+    transform: translateY(-2px);
+  }
+
+  .btn--inverse-outline {
+    background-color: transparent;
+    color: var(--c-on-ink);
+    border-color: rgb(247 243 236 / 0.38);
+  }
+
+  .btn--inverse-outline:hover {
+    color: var(--c-on-ink);
+    border-color: rgb(247 243 236 / 0.75);
+    background-color: rgb(247 243 236 / 0.1);
+    transform: translateY(-2px);
+  }
+
+  .btn--ghost {
+    padding-inline: var(--space-2xs);
+    background-color: transparent;
+    color: var(--c-ink);
+  }
+
+  .btn--ghost:hover {
+    color: var(--c-accent);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn:hover {
+      transform: none;
+    }
+
+    .btn::before {
+      display: none;
+    }
+  }
+</style>

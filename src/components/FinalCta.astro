@@ -1,0 +1,91 @@
+---
+import { FINAL_CTA } from '../data/content';
+import { CTA } from '../data/site';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import Button from './ui/Button.astro';
+
+/**
+ * Zamknięcie strony — sekcja na ciemnym tle, kontrastująca z resztą
+ * i domykająca ścieżkę użytkownika przyciskami CTA.
+ */
+---
+
+<Section id="dolacz" tone="ink" labelledby="dolacz-title" class="cta">
+  <span class="cta__halo" aria-hidden="true"></span>
+
+  <SectionHeading id="dolacz-title" title={FINAL_CTA.title} subtitle={FINAL_CTA.subtitle} />
+
+  <div class="cta__columns">
+    {
+      FINAL_CTA.columns.map((column, index) => (
+        <div class="cta__column" data-reveal style={`--reveal-delay: ${index * 120}ms`}>
+          <h3 class="cta__column-title">{column.title}</h3>
+          <p class="cta__column-body">{column.body}</p>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="cta__actions" data-reveal="fade" style="--reveal-delay: 260ms">
+    <Button href={CTA.primary.href} variant="inverse" size="lg">
+      {CTA.primary.label}
+    </Button>
+    <Button href={CTA.secondary.href} variant="inverse-outline" size="lg">
+      {CTA.secondary.label}
+    </Button>
+  </div>
+</Section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .cta__halo {
+    position: absolute;
+    top: -40%;
+    left: 50%;
+    width: min(60rem, 130%);
+    aspect-ratio: 1;
+    translate: -50% 0;
+    background: radial-gradient(circle at center, rgb(185 102 61 / 0.28) 0%, transparent 62%);
+    pointer-events: none;
+  }
+
+  .cta :global(.container) {
+    position: relative;
+  }
+
+  .cta__columns {
+    display: grid;
+    gap: clamp(1.5rem, 1.2rem + 2vw, 3rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+    max-width: var(--container-narrow);
+    margin-inline: auto;
+  }
+
+  .cta__column-title {
+    margin: 0 0 var(--space-2xs);
+    color: var(--c-on-ink);
+  }
+
+  .cta__column-body {
+    max-width: var(--measure);
+    margin: 0 auto;
+    color: rgb(247 243 236 / 0.78);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+
+  .cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-top: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+  }
+
+</style>

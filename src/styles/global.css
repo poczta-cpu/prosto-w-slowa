@@ -1,0 +1,13 @@
+/**
+ * Punkt wejścia dla stylów globalnych.
+ * Style poszczególnych komponentów żyją w ich plikach .astro (scoped).
+ */
+
+/* Fonty self-hosted — brak zapytań do zewnętrznych CDN-ów */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/fraunces/full.css';
+@import '@fontsource-variable/fraunces/full-italic.css';
+
+@import './tokens.css';
+@import './base.css';
+@import './utilities.css';

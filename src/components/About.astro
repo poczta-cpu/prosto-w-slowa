@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import aboutImage from '../assets/wnetrze-salon.png';
+import { ABOUT } from '../data/content';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import FeatureCard from './ui/FeatureCard.astro';
+
+/**
+ * „O nas” — nagłówek, grafika wnętrza i trzy karty: Kim jesteśmy,
+ * Nasze podejście, Dla kogo.
+ */
+---
+
+<Section id="o-nas" tone="alt" labelledby="o-nas-title">
+  <SectionHeading id="o-nas-title" title={ABOUT.title} subtitle={ABOUT.subtitle} />
+
+  <div class="about__media" data-reveal="fade">
+    <Image
+      src={aboutImage}
+      alt={ABOUT.imageAlt}
+      widths={[640, 960, 1400]}
+      sizes="(min-width: 76rem) 72rem, 92vw"
+      loading="lazy"
+      class="about__image"
+    />
+  </div>
+
+  <div class="grid-cards about__cards">
+    {ABOUT.features.map((feature, index) => <FeatureCard {...feature} delay={index * 110} />)}
+  </div>
+</Section>
+
+<style>
+  .about__media {
+    margin-bottom: var(--section-gap);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .about__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    transition: transform 1.2s var(--ease-soft);
+  }
+
+  .about__media:hover .about__image {
+    transform: scale(1.02);
+  }
+
+  @media (max-width: 40rem) {
+    .about__image {
+      aspect-ratio: 16 / 10;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about__media:hover .about__image {
+      transform: none;
+    }
+  }
+</style>

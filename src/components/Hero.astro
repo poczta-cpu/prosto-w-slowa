@@ -1,0 +1,245 @@
+---
+import { Image } from 'astro:assets';
+import heroImage from '../assets/rozmowa-przy-oknie.png';
+import { HERO } from '../data/content';
+import { CTA } from '../data/site';
+import Button from './ui/Button.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * Sekcja otwierająca. Tekst po lewej, grafika po prawej;
+ * poniżej ~56rem układ składa się do jednej kolumny (tekst nad obrazem).
+ */
+---
+
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero__glow" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <div class="hero__content">
+      <p class="hero__eyebrow" data-reveal="fade">{HERO.eyebrow}</p>
+
+      <h1 class="hero__title" id="hero-title" data-reveal style="--reveal-delay: 80ms">
+        <span class="hero__title-main">{HERO.title}</span>
+        <span class="hero__title-accent">{HERO.titleAccent}</span>
+      </h1>
+
+      <p class="hero__lead" data-reveal style="--reveal-delay: 180ms">{HERO.lead}</p>
+
+      <div class="hero__actions" data-reveal style="--reveal-delay: 280ms">
+        <Button href={CTA.primary.href} variant="primary" size="lg">
+          {CTA.primary.label}
+        </Button>
+        <Button href={CTA.learnMore.href} variant="secondary" size="lg">
+          {CTA.learnMore.label}
+        </Button>
+      </div>
+    </div>
+
+    <div class="hero__media" data-reveal="scale" style="--reveal-delay: 220ms">
+      <div class="hero__frame">
+        <Image
+          src={heroImage}
+          alt={HERO.imageAlt}
+          widths={[420, 640, 900]}
+          sizes="(min-width: 56rem) 42vw, 92vw"
+          loading="eager"
+          fetchpriority="high"
+          class="hero__image"
+        />
+      </div>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#o-nas" aria-label="Przewiń do sekcji O nas">
+    <Icon name="chevron" size={20} />
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: calc(100svh - var(--header-height));
+    padding-block: clamp(3rem, 2rem + 6vw, 6rem) clamp(4rem, 3rem + 5vw, 7rem);
+    overflow: hidden;
+  }
+
+  /* Ciepła poświata w tle — zamiast płaskiego koloru */
+  .hero__glow {
+    position: absolute;
+    top: -22%;
+    right: -12%;
+    width: min(65rem, 110%);
+    aspect-ratio: 1;
+    background: radial-gradient(
+      circle at center,
+      rgb(240 221 206 / 0.85) 0%,
+      rgb(245 241 233 / 0) 62%
+    );
+    pointer-events: none;
+  }
+
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: clamp(2.5rem, 2rem + 4vw, 4.5rem);
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .hero__eyebrow {
+    margin: 0;
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--c-accent);
+  }
+
+  .hero__title {
+    margin: 0;
+    max-width: 14ch;
+  }
+
+  .hero__title-main {
+    display: block;
+  }
+
+  .hero__title-accent {
+    display: block;
+    max-width: 18ch;
+    margin-top: 0.1em;
+    font-size: 0.52em;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--c-ink-muted);
+    letter-spacing: 0;
+    font-variation-settings: 'SOFT' 60, 'WONK' 1, 'opsz' 48;
+  }
+
+  .hero__lead {
+    max-width: var(--measure-narrow);
+    margin: 0;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
+    color: var(--c-ink-muted);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-2xs);
+  }
+
+  /* ── Grafika ────────────────────────────────────────────────────── */
+
+  .hero__media {
+    position: relative;
+  }
+
+  .hero__frame {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    /* Delikatne unoszenie się kadru — powolne i ledwo zauważalne */
+    animation: hero-float 9s var(--ease-soft) infinite alternate;
+  }
+
+  .hero__frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgb(82 43 41 / 0.08);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .hero__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  @keyframes hero-float {
+    from {
+      transform: translateY(-0.4rem);
+    }
+    to {
+      transform: translateY(0.4rem);
+    }
+  }
+
+  /* ── Strzałka przewijania ───────────────────────────────────────── */
+
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1rem, 0.5rem + 1.5vw, 2rem);
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-left: -1.375rem;
+    color: var(--c-ink-subtle);
+    border: 1px solid var(--c-line);
+    border-radius: 50%;
+    background-color: rgb(251 248 242 / 0.7);
+    animation: hero-bob 2.4s var(--ease-soft) infinite;
+    transition:
+      color var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+
+  .hero__scroll:hover {
+    color: var(--c-accent);
+    border-color: var(--c-accent-soft);
+  }
+
+  @keyframes hero-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(0.3rem);
+    }
+  }
+
+  /* ── Breakpointy ────────────────────────────────────────────────── */
+
+  @media (min-width: 56rem) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    }
+  }
+
+  /* Na niskich ekranach pełna wysokość dławi treść */
+  @media (max-height: 40rem) and (max-width: 56rem) {
+    .hero {
+      min-height: 0;
+    }
+
+    .hero__scroll {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__frame,
+    .hero__scroll {
+      animation: none;
+    }
+  }
+</style>

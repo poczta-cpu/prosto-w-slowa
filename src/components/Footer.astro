@@ -1,0 +1,145 @@
+---
+import { SITE, NAV_LINKS, CONTACT } from '../data/site';
+import { RULES } from '../data/content';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <a class="footer__logo" href="#top">
+        <span class="footer__mark" aria-hidden="true"></span>
+        {SITE.name}
+      </a>
+      <p class="footer__tagline">Twoja przestrzeń do rozmowy.</p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Nawigacja w stopce">
+      <ul class="footer__list">
+        {
+          NAV_LINKS.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__contact">
+      <p>{CONTACT.email}</p>
+      <p>{CONTACT.phone}</p>
+    </div>
+  </div>
+
+  <div class="container footer__bar">
+    <p class="footer__copy">© {year} {SITE.name}. Wszelkie prawa zastrzeżone.</p>
+    <a class="footer__legal" href={RULES.link.href}>Regulamin</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: clamp(2.5rem, 2rem + 2.5vw, 4rem) var(--space-lg);
+    background-color: var(--c-bg-alt);
+    border-top: 1px solid var(--c-line);
+    font-size: var(--fs-sm);
+  }
+
+  .footer__inner {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+    padding-bottom: var(--space-lg);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__inner {
+      grid-template-columns: 1.2fr 1fr auto;
+      align-items: start;
+    }
+  }
+
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    font-weight: 500;
+    text-decoration: none;
+    font-variation-settings: 'SOFT' 40, 'opsz' 24;
+  }
+
+  .footer__mark {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background-color: var(--c-accent);
+  }
+
+  .footer__tagline {
+    margin: var(--space-2xs) 0 0;
+    color: var(--c-ink-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .footer__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-md);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer__list a {
+    color: var(--c-ink-muted);
+    text-decoration: none;
+  }
+
+  .footer__list a:hover {
+    color: var(--c-accent);
+    text-decoration: underline;
+  }
+
+  .footer__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: var(--c-ink-muted);
+  }
+
+  .footer__contact p {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .footer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--c-line);
+    color: var(--c-ink-subtle);
+    font-size: var(--fs-xs);
+  }
+
+  .footer__copy {
+    margin: 0;
+  }
+
+  .footer__legal {
+    color: var(--c-ink-subtle);
+    text-decoration: none;
+  }
+
+  .footer__legal:hover {
+    color: var(--c-accent);
+    text-decoration: underline;
+  }
+</style>

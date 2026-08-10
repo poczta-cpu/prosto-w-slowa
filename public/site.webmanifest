@@ -1,0 +1,14 @@
+{
+  "name": "Prosto w słowa",
+  "short_name": "Prosto w słowa",
+  "description": "Bezpieczne miejsce, gdzie możesz być sobą. Przyjazna atmosfera i otwarte uszy na Twoje potrzeby.",
+  "lang": "pl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F5F1E9",
+  "theme_color": "#F5F1E9",
+  "icons": [
+    { "src": "./favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "./apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ]
+}
