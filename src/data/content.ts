@@ -107,7 +107,7 @@ export const TESTIMONIALS = {
     },
     {
       author: 'Ewa P.',
-      quote: 'Polecam każdemu, kto potrzebuje chwili wytchnienia. Niezwykłe doświadczenie.',
+      quote: 'Asia jest świetna! Od razu poczułam się lepiej!',
       rating: 5,
     },
   ] satisfies Testimonial[],
