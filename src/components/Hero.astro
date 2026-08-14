@@ -1,15 +1,22 @@
 ---
-import { Image } from 'astro:assets';
-import heroImage from '../assets/rozmowa-przy-oknie.png';
 import { HERO } from '../data/content';
-import { CTA } from '../data/site';
+import { CTA, SITE, bookingIsExternal } from '../data/site';
 import Button from './ui/Button.astro';
 import Icon from './ui/Icon.astro';
 
 /**
- * Sekcja otwierająca. Tekst po lewej, grafika po prawej;
- * poniżej ~56rem układ składa się do jednej kolumny (tekst nad obrazem).
+ * Sekcja otwierająca. W pięć sekund ma odpowiedzieć: co to jest, dla kogo
+ * i co zrobić dalej — dlatego cena, czas i „kamera opcjonalna” stoją
+ * bezpośrednio pod przyciskami, a nie dopiero w cenniku.
+ *
+ * Prawa kolumna to miejsce na naturalne zdjęcie Asi (brief, sekcja 21).
+ * Dopóki go nie ma, stoi tam kadr z palety marki — świadomie zaprojektowany,
+ * a nie zdjęcie stockowe.
  */
+
+const externalProps = bookingIsExternal
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
 <section class="hero" id="top" aria-labelledby="hero-title">
@@ -20,38 +27,46 @@ import Icon from './ui/Icon.astro';
       <p class="hero__eyebrow" data-reveal="fade">{HERO.eyebrow}</p>
 
       <h1 class="hero__title" id="hero-title" data-reveal style="--reveal-delay: 80ms">
-        <span class="hero__title-main">{HERO.title}</span>
-        <span class="hero__title-accent">{HERO.titleAccent}</span>
+        {HERO.title}
       </h1>
 
-      <p class="hero__lead" data-reveal style="--reveal-delay: 180ms">{HERO.lead}</p>
+      <p class="hero__lead" data-reveal style="--reveal-delay: 160ms">{HERO.lead}</p>
+
+      <p class="hand hero__note" data-reveal style="--reveal-delay: 220ms">{HERO.note}</p>
 
       <div class="hero__actions" data-reveal style="--reveal-delay: 280ms">
-        <Button href={CTA.primary.href} variant="primary" size="lg">
+        <Button href={CTA.primary.href} variant="primary" size="lg" {...externalProps}>
           {CTA.primary.label}
         </Button>
-        <Button href={CTA.learnMore.href} variant="secondary" size="lg">
-          {CTA.learnMore.label}
+        <Button href={CTA.secondary.href} variant="secondary" size="lg">
+          {CTA.secondary.label}
         </Button>
       </div>
+
+      <ul class="facts" data-reveal="fade" style="--reveal-delay: 360ms">
+        {
+          HERO.facts.map((fact) => (
+            <li class="facts__item">
+              <span class="facts__icon" aria-hidden="true">
+                <Icon name={fact.icon as never} size={17} />
+              </span>
+              {fact.label}
+            </li>
+          ))
+        }
+      </ul>
     </div>
 
-    <div class="hero__media" data-reveal="scale" style="--reveal-delay: 220ms">
-      <div class="hero__frame">
-        <Image
-          src={heroImage}
-          alt={HERO.imageAlt}
-          widths={[420, 640, 900]}
-          sizes="(min-width: 56rem) 42vw, 92vw"
-          loading="eager"
-          fetchpriority="high"
-          class="hero__image"
-        />
-      </div>
+    <div class="hero__media" data-reveal="scale" style="--reveal-delay: 240ms">
+      {/* TODO: podmienić na <Image> z naturalnym zdjęciem Asi. */}
+      <figure class="portrait" role="img" aria-label={HERO.portraitAlt}>
+        <span class="portrait__name">{SITE.host}</span>
+        <figcaption class="hand portrait__caption">prowadzę te rozmowy</figcaption>
+      </figure>
     </div>
   </div>
 
-  <a class="hero__scroll" href="#o-nas" aria-label="Przewiń do sekcji O nas">
+  <a class="hero__scroll" href="#momenty" aria-label="Przewiń w dół">
     <Icon name="chevron" size={20} />
   </a>
 </section>
@@ -62,21 +77,21 @@ import Icon from './ui/Icon.astro';
     display: flex;
     align-items: center;
     min-height: calc(100svh - var(--header-height));
-    padding-block: clamp(3rem, 2rem + 6vw, 6rem) clamp(4rem, 3rem + 5vw, 7rem);
+    padding-block: clamp(2.5rem, 1.5rem + 5vw, 5rem) clamp(4rem, 3rem + 5vw, 7rem);
     overflow: hidden;
   }
 
-  /* Ciepła poświata w tle — zamiast płaskiego koloru */
+  /* Ciepła poświata w tle — brzoskwiniowy beż z palety, nie płaski kolor */
   .hero__glow {
     position: absolute;
-    top: -22%;
-    right: -12%;
-    width: min(65rem, 110%);
+    top: -25%;
+    right: -14%;
+    width: min(62rem, 115%);
     aspect-ratio: 1;
     background: radial-gradient(
       circle at center,
-      rgb(240 221 206 / 0.85) 0%,
-      rgb(245 241 233 / 0) 62%
+      rgb(240 215 193 / 0.9) 0%,
+      rgb(250 245 238 / 0) 62%
     );
     pointer-events: none;
   }
@@ -84,7 +99,7 @@ import Icon from './ui/Icon.astro';
   .hero__inner {
     position: relative;
     display: grid;
-    gap: clamp(2.5rem, 2rem + 4vw, 4.5rem);
+    gap: clamp(2.5rem, 2rem + 4vw, 4rem);
     align-items: center;
     grid-template-columns: 1fr;
   }
@@ -93,45 +108,36 @@ import Icon from './ui/Icon.astro';
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: var(--space-md);
+    gap: var(--space-sm);
   }
 
   .hero__eyebrow {
     margin: 0;
+    padding: 0.3rem 0.75rem;
+    background-color: var(--c-accent-tint);
+    border-radius: var(--radius-pill);
     font-size: var(--fs-xs);
-    font-weight: 500;
-    letter-spacing: var(--ls-wider);
+    font-weight: 600;
+    letter-spacing: var(--ls-wide);
     text-transform: uppercase;
-    color: var(--c-accent);
+    color: var(--c-link);
   }
 
   .hero__title {
     margin: 0;
-    max-width: 14ch;
-  }
-
-  .hero__title-main {
-    display: block;
-  }
-
-  .hero__title-accent {
-    display: block;
-    max-width: 18ch;
-    margin-top: 0.1em;
-    font-size: 0.52em;
-    font-weight: 300;
-    font-style: italic;
-    color: var(--c-ink-muted);
-    letter-spacing: 0;
-    font-variation-settings: 'SOFT' 60, 'WONK' 1, 'opsz' 48;
+    max-width: 13ch;
   }
 
   .hero__lead {
-    max-width: var(--measure-narrow);
+    max-width: 40ch;
     margin: 0;
     font-size: var(--fs-md);
     line-height: var(--lh-relaxed);
     color: var(--c-ink-muted);
+  }
+
+  .hero__note {
+    margin: 0;
   }
 
   .hero__actions {
@@ -141,35 +147,77 @@ import Icon from './ui/Icon.astro';
     margin-top: var(--space-2xs);
   }
 
-  /* ── Grafika ────────────────────────────────────────────────────── */
+  /* ── Fakty: cena, czas, kamera ──────────────────────────────────── */
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-md);
+    margin: var(--space-2xs) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .facts__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-muted);
+  }
+
+  .facts__icon {
+    display: grid;
+    place-items: center;
+    color: var(--c-accent);
+  }
+
+  /* ── Kadr na zdjęcie ────────────────────────────────────────────── */
 
   .hero__media {
     position: relative;
+    max-width: 26rem;
+    width: 100%;
+    margin-inline: auto;
   }
 
-  .hero__frame {
+  .portrait {
     position: relative;
+    display: grid;
+    place-content: center;
+    gap: var(--space-2xs);
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    background:
+      radial-gradient(circle at 30% 22%, rgb(255 255 255 / 0.55), transparent 55%),
+      linear-gradient(160deg, var(--c-peach) 0%, var(--c-peach-soft) 100%);
     border-radius: var(--radius-xl);
-    overflow: hidden;
     box-shadow: var(--shadow-lg);
+    text-align: center;
     /* Delikatne unoszenie się kadru — powolne i ledwo zauważalne */
     animation: hero-float 9s var(--ease-soft) infinite alternate;
   }
 
-  .hero__frame::after {
+  .portrait::after {
     content: '';
     position: absolute;
     inset: 0;
-    border: 1px solid rgb(82 43 41 / 0.08);
+    border: 1px solid rgb(62 9 10 / 0.08);
     border-radius: inherit;
     pointer-events: none;
   }
 
-  .hero__image {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+  .portrait__name {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 2rem + 6vw, 5rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--c-burgundy);
+  }
+
+  .portrait__caption {
+    font-size: var(--fs-lg);
   }
 
   @keyframes hero-float {
@@ -195,7 +243,7 @@ import Icon from './ui/Icon.astro';
     color: var(--c-ink-subtle);
     border: 1px solid var(--c-line);
     border-radius: 50%;
-    background-color: rgb(251 248 242 / 0.7);
+    background-color: rgb(255 252 248 / 0.75);
     animation: hero-bob 2.4s var(--ease-soft) infinite;
     transition:
       color var(--dur-base) var(--ease-out),
@@ -203,7 +251,7 @@ import Icon from './ui/Icon.astro';
   }
 
   .hero__scroll:hover {
-    color: var(--c-accent);
+    color: var(--c-link);
     border-color: var(--c-accent-soft);
   }
 
@@ -221,7 +269,11 @@ import Icon from './ui/Icon.astro';
 
   @media (min-width: 56rem) {
     .hero__inner {
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+
+    .hero__media {
+      margin-inline: 0 0;
     }
   }
 
@@ -237,7 +289,7 @@ import Icon from './ui/Icon.astro';
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__frame,
+    .portrait,
     .hero__scroll {
       animation: none;
     }

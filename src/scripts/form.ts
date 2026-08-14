@@ -8,26 +8,24 @@
  */
 const FORM_ENDPOINT = '';
 
-type FieldName = 'name' | 'email' | 'phone' | 'message' | 'consent';
+type FieldName = 'name' | 'email' | 'message' | 'consent';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
-const PHONE_PATTERN = /^[+\d][\d\s()-]{6,}$/;
 
 const MESSAGES = {
-  nameRequired: 'Podaj imię, żebyśmy wiedzieli, jak się do Ciebie zwracać.',
+  nameRequired: 'Podaj imię, żebym wiedziała, jak się do Ciebie zwracać.',
   nameShort: 'Imię powinno mieć co najmniej 2 znaki.',
-  emailRequired: 'Podaj adres e-mail, abyśmy mogli odpowiedzieć.',
+  emailRequired: 'Podaj adres e-mail, żebym mogła odpisać.',
   emailInvalid: 'To nie wygląda na poprawny adres e-mail.',
-  phoneInvalid: 'Numer telefonu wygląda na niepełny.',
-  messageRequired: 'Napisz kilka słów o tym, z czym przychodzisz.',
+  messageRequired: 'Napisz choć kilka słów — wystarczy, kiedy Ci pasuje.',
   messageShort: 'Wiadomość powinna mieć co najmniej 10 znaków.',
-  consentRequired: 'Bez tej zgody nie możemy odpowiedzieć na wiadomość.',
+  consentRequired: 'Bez tej zgody nie mogę odpisać na wiadomość.',
   sending: 'Wysyłanie…',
   submit: 'Wyślij wiadomość',
-  success: 'Dziękujemy. Wiadomość została wysłana — odezwiemy się najszybciej, jak to możliwe.',
-  failure: 'Nie udało się wysłać wiadomości. Spróbuj ponownie lub napisz do nas bezpośrednio.',
+  success: 'Dzięki. Wiadomość poszła — odezwę się najszybciej, jak dam radę.',
+  failure: 'Nie udało się wysłać wiadomości. Spróbuj ponownie albo napisz na Instagramie.',
   notConfigured:
-    'Formularz przeszedł walidację, ale wysyłka nie jest jeszcze podłączona. Ustaw FORM_ENDPOINT w src/scripts/form.ts lub skorzystaj z danych kontaktowych obok.',
+    'Formularz przeszedł walidację, ale wysyłka nie jest jeszcze podłączona. Ustaw FORM_ENDPOINT w src/scripts/form.ts lub napisz przez kanały obok.',
 } as const;
 
 /** Zwraca komunikat błędu albo null, gdy wartość jest poprawna. */
@@ -39,10 +37,6 @@ function validateField(name: FieldName, value: string, checked: boolean): string
     case 'email':
       if (!value) return MESSAGES.emailRequired;
       return EMAIL_PATTERN.test(value) ? null : MESSAGES.emailInvalid;
-    case 'phone':
-      // Pole opcjonalne — sprawdzamy tylko, gdy coś wpisano
-      if (!value) return null;
-      return PHONE_PATTERN.test(value) ? null : MESSAGES.phoneInvalid;
     case 'message':
       if (!value) return MESSAGES.messageRequired;
       return value.length < 10 ? MESSAGES.messageShort : null;

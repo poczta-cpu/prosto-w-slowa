@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE, CONTACT } from '../data/site';
-import { FAQ } from '../data/content';
+import { FAQ, PRICING } from '../data/content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -21,19 +21,32 @@ const withBase = (path: string) =>
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 const ogImage = new URL(withBase('og-image.png'), Astro.site ?? Astro.url).href;
 
-/* Schema.org — LocalBusiness opisuje usługę, FAQPage odwzorowuje sekcję FAQ.
-   Pola z placeholderami są pomijane, żeby nie publikować pustych danych. */
-const businessSchema = {
+/* Schema.org — `Service`, a nie LocalBusiness: usługa jest w całości online
+   i nie ma lokalu. Celowo nie używamy typów medycznych ani zdrowotnych,
+   bo to nie jest pomoc psychologiczna. Puste pola są pomijane. */
+const serviceSchema = {
   '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
+  '@type': 'Service',
   name: SITE.name,
+  serviceType: 'Płatna rozmowa wspierająca 1:1 online',
   description: SITE.description,
   url: canonical,
   image: ogImage,
-  ...(CONTACT.phoneHref ? { telephone: CONTACT.phoneHref } : {}),
-  ...(CONTACT.emailHref ? { email: CONTACT.emailHref } : {}),
+  provider: {
+    '@type': 'Person',
+    name: SITE.host,
+    ...(CONTACT.email ? { email: CONTACT.email } : {}),
+    sameAs: [CONTACT.instagramHref],
+  },
   areaServed: 'PL',
-  knowsLanguage: 'pl',
+  availableLanguage: 'pl',
+  offers: PRICING.plans.map((plan) => ({
+    '@type': 'Offer',
+    name: `Rozmowa ${plan.duration}`,
+    price: plan.price,
+    priceCurrency: 'PLN',
+    availability: 'https://schema.org/OnlineOnly',
+  })),
 };
 
 const faqSchema = {
@@ -57,7 +70,7 @@ const faqSchema = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#F5F1E9" />
+    <meta name="theme-color" content="#FAF5EE" />
 
     <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={withBase('apple-touch-icon.png')} />
@@ -79,7 +92,7 @@ const faqSchema = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <script is:inline set:html={JSON.stringify(businessSchema)} type="application/ld+json" />
+    <script is:inline set:html={JSON.stringify(serviceSchema)} type="application/ld+json" />
     <script is:inline set:html={JSON.stringify(faqSchema)} type="application/ld+json" />
 
     {/* Ustawiane przed renderem, aby uniknąć mignięcia ukrytych sekcji, gdy JS jest wyłączony. */}

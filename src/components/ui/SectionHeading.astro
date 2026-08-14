@@ -1,34 +1,50 @@
 ---
 /**
- * Nagłówek sekcji w formacie ze strony źródłowej: „Tytuł: podtytuł”.
- * Tytuł jest wyróżniony, podtytuł stanowi jego dopowiedzenie.
+ * Nagłówek sekcji: krótka etykieta, tytuł redakcyjny (Cormorant Garamond)
+ * i opcjonalny wprowadzający akapit.
+ *
+ * Domyślnie wyrównany do lewej — układ ma być redakcyjny, nie „landingowy”.
  */
 interface Props {
   id: string;
+  eyebrow?: string;
   title: string;
-  subtitle: string;
+  lead?: string;
   align?: 'start' | 'center';
   /** Poziom nagłówka — domyślnie h2, bo H1 należy do sekcji hero. */
   as?: 'h2' | 'h3';
   class?: string;
 }
 
-const { id, title, subtitle, align = 'center', as: Tag = 'h2', class: className } = Astro.props;
+const {
+  id,
+  eyebrow,
+  title,
+  lead,
+  align = 'start',
+  as: Tag = 'h2',
+  class: className,
+} = Astro.props;
 ---
 
 <div class:list={['heading', `heading--${align}`, className]} data-reveal>
-  <Tag id={id} class="heading__title">
-    <span class="heading__lead">{title}</span>
-    <span class="heading__sub">{subtitle}</span>
-  </Tag>
-  <span class="heading__rule" aria-hidden="true"></span>
+  {
+    eyebrow && (
+      <p class="heading__eyebrow">
+        <span class="heading__dash" aria-hidden="true" />
+        {eyebrow}
+      </p>
+    )
+  }
+  <Tag id={id} class="heading__title">{title}</Tag>
+  {lead && <p class="heading__lead">{lead}</p>}
 </div>
 
 <style>
   .heading {
     display: flex;
     flex-direction: column;
-    gap: var(--space-md);
+    gap: var(--space-xs);
     margin-bottom: var(--section-gap);
   }
 
@@ -42,52 +58,61 @@ const { id, title, subtitle, align = 'center', as: Tag = 'h2', class: className 
     text-align: left;
   }
 
+  .heading__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: var(--ls-wider);
+    text-transform: uppercase;
+    color: var(--c-ink-subtle);
+  }
+
+  .heading__dash {
+    display: block;
+    width: 1.75rem;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--c-accent);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform var(--dur-slow) var(--ease-soft) 200ms;
+  }
+
+  .heading.is-revealed .heading__dash {
+    transform: scaleX(1);
+  }
+
   .heading__title {
-    max-width: 22ch;
+    max-width: 20ch;
     margin: 0;
   }
 
   .heading__lead {
-    display: block;
-  }
-
-  .heading__sub {
-    display: block;
-    margin-top: 0.15em;
-    font-size: 0.62em;
-    font-weight: 300;
-    font-style: italic;
+    max-width: var(--measure);
+    margin: var(--space-3xs) 0 0;
     color: var(--c-ink-muted);
-    letter-spacing: 0;
-    font-variation-settings: 'SOFT' 60, 'WONK' 1, 'opsz' 48;
+    font-size: var(--fs-md);
+    line-height: var(--lh-relaxed);
   }
 
-  .heading__rule {
-    display: block;
-    width: 3.5rem;
-    height: 2px;
-    border-radius: 2px;
-    background: linear-gradient(90deg, var(--c-accent), var(--c-accent-soft));
-    transform-origin: left center;
-    transform: scaleX(0);
-    transition: transform var(--dur-slow) var(--ease-soft) 240ms;
+  /* Sekcja na burgundowym tle */
+  :global(.section--ink) .heading__eyebrow {
+    color: var(--c-on-ink-muted);
   }
 
-  .heading--center .heading__rule {
-    transform-origin: center;
+  :global(.section--ink) .heading__dash {
+    background-color: var(--c-on-ink-accent);
   }
 
-  .heading.is-revealed .heading__rule {
-    transform: scaleX(1);
-  }
-
-  /* Sekcja na ciemnym tle */
-  :global(.section--ink) .heading__sub {
-    color: rgb(247 243 236 / 0.72);
+  :global(.section--ink) .heading__lead {
+    color: var(--c-on-ink-muted);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .heading__rule {
+    .heading__dash {
       transform: scaleX(1);
       transition: none;
     }

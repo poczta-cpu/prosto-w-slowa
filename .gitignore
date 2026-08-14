@@ -30,3 +30,13 @@ CLAUDE.md
 README.md
 prompt.txt
 *.notatki.md
+
+# materiały od klienta — mogą zawierać dane wrażliwe, nigdy nie trafiają na GitHuba
+brief*
+*.docx
+*.doc
+*.pdf
+
+# surowe zdjęcia od klienta — do repozytorium trafiają dopiero wybrane,
+# przycięte i zoptymalizowane kadry w src/assets/
+FOTO/

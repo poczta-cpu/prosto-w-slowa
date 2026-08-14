@@ -1,65 +1,98 @@
 ---
-import { Image } from 'astro:assets';
-import aboutImage from '../assets/wnetrze-salon.png';
 import { ABOUT } from '../data/content';
+import { SITE } from '../data/site';
 import Section from './ui/Section.astro';
 import SectionHeading from './ui/SectionHeading.astro';
-import FeatureCard from './ui/FeatureCard.astro';
 
 /**
- * „O nas” — nagłówek, grafika wnętrza i trzy karty: Kim jesteśmy,
- * Nasze podejście, Dla kogo.
+ * „O mnie” — krótko i osobiście, bez budowania autorytetu, którego
+ * usługa nie ma. Prawa kolumna czeka na drugie naturalne zdjęcie Asi.
  */
 ---
 
-<Section id="o-nas" tone="alt" labelledby="o-nas-title">
-  <SectionHeading id="o-nas-title" title={ABOUT.title} subtitle={ABOUT.subtitle} />
+<Section id="o-mnie" labelledby="o-mnie-title">
+  <div class="about">
+    <div class="about__text">
+      <SectionHeading id="o-mnie-title" eyebrow={ABOUT.eyebrow} title={ABOUT.title} />
 
-  <div class="about__media" data-reveal="fade">
-    <Image
-      src={aboutImage}
-      alt={ABOUT.imageAlt}
-      widths={[640, 960, 1400]}
-      sizes="(min-width: 76rem) 72rem, 92vw"
-      loading="lazy"
-      class="about__image"
-    />
-  </div>
+      {
+        ABOUT.paragraphs.map((paragraph, index) => (
+          <p class="about__paragraph" data-reveal style={`--reveal-delay: ${index * 90}ms`}>
+            {paragraph}
+          </p>
+        ))
+      }
 
-  <div class="grid-cards about__cards">
-    {ABOUT.features.map((feature, index) => <FeatureCard {...feature} delay={index * 110} />)}
+      <p class="hand about__note" data-reveal="fade" style="--reveal-delay: 320ms">
+        {ABOUT.note}
+      </p>
+    </div>
+
+    <div class="about__media" data-reveal="left" style="--reveal-delay: 140ms">
+      {/* TODO: podmienić na <Image> ze zdjęciem Asi do sekcji „O mnie”. */}
+      <figure class="frame" role="img" aria-label={`${SITE.host} — osoba prowadząca rozmowy`}>
+        <blockquote class="frame__quote">
+          Czasem nie chodzi o radę. Chodzi o to, żeby powiedzieć to na głos.
+        </blockquote>
+      </figure>
+    </div>
   </div>
 </Section>
 
 <style>
-  .about__media {
-    margin-bottom: var(--section-gap);
+  .about {
+    display: grid;
+    gap: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+
+  .about__text :global(.heading) {
+    margin-bottom: var(--space-md);
+  }
+
+  .about__paragraph {
+    max-width: var(--measure);
+    margin: 0 0 var(--space-sm);
+    color: var(--c-ink-muted);
+    line-height: var(--lh-relaxed);
+  }
+
+  .about__note {
+    margin: var(--space-sm) 0 0;
+  }
+
+  /* ── Kadr / cytat ───────────────────────────────────────────────── */
+
+  .frame {
+    display: grid;
+    place-content: center;
+    margin: 0;
+    padding: clamp(1.75rem, 1.4rem + 2vw, 3rem);
+    aspect-ratio: 1;
+    background:
+      radial-gradient(circle at 72% 18%, rgb(255 255 255 / 0.5), transparent 55%),
+      linear-gradient(200deg, var(--c-peach-soft) 0%, var(--c-peach) 100%);
+    border: 1px solid var(--c-line-strong);
     border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
   }
 
-  .about__image {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 7;
-    object-fit: cover;
-    transition: transform 1.2s var(--ease-soft);
+  .frame__quote {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.15rem + 1.6vw, 2.25rem);
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--c-burgundy);
+    text-align: center;
+    text-wrap: balance;
   }
 
-  .about__media:hover .about__image {
-    transform: scale(1.02);
-  }
-
-  @media (max-width: 40rem) {
-    .about__image {
-      aspect-ratio: 16 / 10;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .about__media:hover .about__image {
-      transform: none;
+  @media (min-width: 56rem) {
+    .about {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     }
   }
 </style>

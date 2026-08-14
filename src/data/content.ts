@@ -1,7 +1,8 @@
 /**
- * Treść poszczególnych sekcji strony.
+ * Treść wszystkich sekcji strony.
  *
- * Teksty pochodzą ze strony źródłowej — kolejność sekcji jest zachowana.
+ * Kolejność odpowiada strukturze z briefu marki: najpierw sprzedajemy
+ * i tłumaczymy własną kategorię, a granice usługi stawiamy dopiero na końcu.
  * `icon` odwołuje się do nazw z `src/components/ui/Icon.astro`.
  */
 
@@ -13,12 +14,6 @@ export type Feature = {
 
 export type Step = Feature & { number: string };
 
-export type Testimonial = {
-  author: string;
-  quote: string;
-  rating: number;
-};
-
 export type FaqItem = {
   question: string;
   answer: string;
@@ -27,198 +22,249 @@ export type FaqItem = {
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 
 export const HERO = {
-  eyebrow: 'Przestrzeń do rozmowy',
-  title: 'Prosto w słowa',
-  titleAccent: 'Twoja przestrzeń do rozmowy',
-  lead: 'Bezpieczne miejsce, gdzie możesz być sobą. Przyjazna atmosfera i otwarte uszy na Twoje potrzeby.',
-  imageAlt:
-    'Dwie osoby siedzące naprzeciw siebie i rozmawiające w jasnym, ciepłym wnętrzu z dużym oknem',
+  eyebrow: 'Rozmowy 1:1 online',
+  title: 'Masz coś do przegadania?',
+  lead: 'Umów rozmowę 1:1 online z Asią. 25 albo 50 minut, w których nie musisz zastanawiać się, czy temat jest wystarczająco ważny.',
+  note: 'Bez oceniania. Bez naprawiania.',
+  /* Krótkie fakty pod CTA — cena, czas i kamera mają być widoczne od razu. */
+  facts: [
+    { icon: 'clock', label: '25 albo 50 minut' },
+    { icon: 'wallet', label: '79 zł albo 129 zł' },
+    { icon: 'camera', label: 'Kamera opcjonalna' },
+  ],
+  /* TODO: naturalne zdjęcie Asi do hero (brief, sekcja 21). Do tego czasu
+     miejsce zajmuje ramka z inicjałem — nie wstawiamy zdjęć stockowych. */
+  portraitAlt: 'Asia — osoba prowadząca rozmowy',
 } as const;
 
-/* ── O nas ────────────────────────────────────────────────────────────── */
+/* ── Może znasz ten moment ────────────────────────────────────────────── */
 
-export const ABOUT = {
-  title: 'O nas',
-  subtitle: 'Ciepło i profesjonalizm w jednym',
-  imageAlt: 'Spokojne, minimalistyczne wnętrze w ciepłych, kremowych barwach',
-  features: [
+export const MOMENTS = {
+  eyebrow: 'Może znasz ten moment',
+  title: 'Nie każdy brak rozmowy wynika z braku ludzi',
+  lead: 'Czasem temat jest zbyt błahy, zbyt świeży albo dotyczy właśnie tych osób, z którymi normalnie się gada.',
+  items: [
     {
-      icon: 'heart',
-      title: 'Kim jesteśmy',
-      body: 'Miejsce, gdzie możesz porozmawiać o wszystkim. Bezpieczna atmosfera, w której poczujesz się wysłuchany i zrozumiany.',
+      quote: 'Nie mam z kim tego przegadać.',
+      body: 'Nie chodzi o to, że nie masz nikogo. Chodzi o to, że akurat teraz nikt nie ma na to głowy.',
     },
     {
-      icon: 'leaf',
-      title: 'Nasze podejście',
-      body: 'Wierzymy w siłę rozmowy. Empatia, akceptacja i brak oceniania. Ulga i nowa perspektywa po każdej sesji.',
+      quote: 'Mam ludzi, ale akurat tego nie chcę mówić im.',
+      body: 'Bo temat dotyczy właśnie ich albo kogoś, kogo oboje znacie.',
     },
     {
-      icon: 'people',
-      title: 'Dla kogo',
-      body: 'Dla każdego, kto potrzebuje przestrzeni do wyrażenia siebie. Uporządkowania myśli i swobodnego wygadania.',
+      quote: 'Nie potrzebuję terapii. Chcę po prostu z kimś pogadać.',
+      body: 'I to jest w porządku. Nie każda rozmowa musi być od razu czymś większym.',
     },
-  ] satisfies Feature[],
+    {
+      quote: 'Nie chcę rady. Chcę to powiedzieć na głos.',
+      body: 'Czasem samo ubranie tego w zdania układa połowę sprawy.',
+    },
+    {
+      quote: 'Nie chcę nikomu zawracać głowy.',
+      body: 'Tutaj nie zawracasz. To jest umówiony czas i on jest Twój.',
+    },
+    {
+      quote: 'Chcę kogoś spoza całej tej sytuacji.',
+      body: 'Kogoś, kto nie zna bohaterów i nie ma w tym żadnego interesu.',
+    },
+  ],
+  /* Konkretne sceny — celowo zwykłe, żeby obniżyć próg wejścia. */
+  scenes: [
+    'randka, która nie do końca wypaliła',
+    'decyzja o zmianie pracy, o której jeszcze nikt nie wie',
+    'niezręczna sytuacja sprzed tygodnia',
+    'myśli, które chodzą w kółko przed snem',
+    'historia tak absurdalna, że trzeba ją komuś opowiedzieć',
+    'dobra wiadomość, którą nie ma z kim uczcić',
+  ],
+  note: 'Nie trzeba mieć kryzysu, żeby mieć o czym pogadać.',
 } as const;
 
 /* ── Jak to działa ────────────────────────────────────────────────────── */
 
 export const HOW_IT_WORKS = {
-  title: 'Jak to działa?',
-  subtitle: 'Prosty proces do Twojej dyspozycji',
+  eyebrow: 'Jak to działa',
+  title: 'Cztery kroki i tyle',
+  lead: 'Bez ankiet wstępnych, bez opisywania historii z góry i bez zobowiązań na przyszłość.',
   steps: [
     {
       number: '01',
-      icon: 'phone',
-      title: 'Kontakt',
-      body: 'Skontaktuj się przez formularz lub telefon. Ustalimy dogodny termin i formę spotkania.',
+      icon: 'clock',
+      title: 'Wybierasz długość',
+      body: '25 albo 50 minut. Nic więcej nie musisz na tym etapie ustalać.',
     },
     {
       number: '02',
-      icon: 'chat',
-      title: 'Spotkanie',
-      body: 'Przyjazna atmosfera. Porozmawiamy o tym, co dla Ciebie ważne. Skupiamy się na Twoich potrzebach.',
+      icon: 'calendar',
+      title: 'Rezerwujesz termin',
+      body: 'Wybierasz godzinę, która Ci pasuje, i opłacasz rozmowę z góry.',
     },
     {
       number: '03',
-      icon: 'sun',
-      title: 'Ulga i perspektywa',
-      body: 'Poczujesz się lżej. Nowe spojrzenie pomoże znaleźć najlepsze rozwiązania.',
+      icon: 'video',
+      title: 'Łączymy się online',
+      body: 'Dostajesz link. Kamerę włączasz, jeśli chcesz — sam dźwięk wystarczy.',
+    },
+    {
+      number: '04',
+      icon: 'chat',
+      title: 'Rozmawiamy',
+      body: 'O tym, o czym chcesz. Nie musisz zaczynać od początku historii.',
     },
   ] satisfies Step[],
 } as const;
 
-/* ── Opinie ───────────────────────────────────────────────────────────── */
+/* ── Dlaczego płatna rozmowa ──────────────────────────────────────────── */
 
-export const TESTIMONIALS = {
-  title: 'Co mówią inni?',
-  subtitle: 'Głosy zadowolonych klientów',
+export const WHY_PAID = {
+  eyebrow: 'Dlaczego płatna rozmowa',
+  title: 'Płacisz za czas, nie za rozwiązanie',
+  lead: 'Nie kupujesz tego, że ktoś naprawi Twoją sprawę. Kupujesz czas, w którym nie musisz zastanawiać się, czy masz prawo zająć komuś uwagę.',
   items: [
     {
-      author: 'Anna K.',
-      quote:
-        'Po rozmowie poczułam, jakby zrzuciłam ogromny ciężar z serca. Dziękuję za zrozumienie i wsparcie.',
-      rating: 5,
-    },
-    {
-      author: 'Marek S.',
-      quote:
-        'Nareszcie znalazłem miejsce, gdzie mogę być sobą bez obaw. Profesjonalizm i ciepło w jednym.',
-      rating: 5,
-    },
-    {
-      author: 'Ewa P.',
-      quote: 'Asia jest świetna! Od razu poczułam się lepiej!',
-      rating: 5,
-    },
-  ] satisfies Testimonial[],
-} as const;
-
-/* ── Filozofia ────────────────────────────────────────────────────────── */
-
-export const PHILOSOPHY = {
-  title: 'Nasza filozofia',
-  subtitle: 'Siła prostych słów',
-  imageAlt: 'Dłonie uniesione ku górze, nad nimi symbol dymku dialogowego',
-  values: [
-    {
-      icon: 'chat',
-      title: 'Otwarta rozmowa',
-      body: 'Kluczem do zrozumienia jest szczera i otwarta rozmowa. Bez filozofii i zawiłości.',
-    },
-    {
-      icon: 'shield',
-      title: 'Autentyczność',
-      body: 'Stawiamy na autentyczność i zaufanie. Przestrzeń do swobodnego wyrażania emocji i myśli.',
+      icon: 'clock',
+      title: 'Ten czas jest Twój',
+      body: 'Przez 25 albo 50 minut nie dzielisz uwagi z niczym innym. Nikt nie odbiera telefonu i nie musi zaraz biec.',
     },
     {
       icon: 'balance',
-      title: 'Bez ocen',
-      body: 'Spotkania to nie terapia, ale miejsce gdzie możesz być sobą. Bez sądu i oczekiwań.',
+      title: 'Nie musisz oddawać',
+      body: 'Nie ma rewanżu. Nie musisz potem pytać „a co u Ciebie" i wysłuchiwać drugiej połowy.',
+    },
+    {
+      icon: 'people',
+      title: 'Nikt nie jest w to zamieszany',
+      body: 'Nie znam Twojej mamy, szefa ani byłego. Nie mam w tej sprawie żadnego interesu.',
+    },
+    {
+      icon: 'spark',
+      title: 'Bez progu ważności',
+      body: 'Nie ma poziomu, od którego temat „się liczy". Możesz przyjść z drobiazgiem.',
     },
   ] satisfies Feature[],
 } as const;
 
-/* ── Regulamin ────────────────────────────────────────────────────────── */
+/* ── O mnie ───────────────────────────────────────────────────────────── */
 
-export const RULES = {
-  title: 'Regulamin',
-  subtitle: 'Jasne zasady dla Twojego komfortu',
-  items: [
-    {
-      number: '1',
-      title: 'Zasady współpracy',
-      body: 'Zapoznaj się z naszymi zasadami, aby zapewnić komfort i bezpieczeństwo obu stronom.',
-    },
-    {
-      number: '2',
-      title: 'Poufność',
-      body: 'Regulamin określa zasady poufności wszystkich rozmów i informacji udostępnionych podczas spotkań.',
-    },
-    {
-      number: '3',
-      title: 'Odwołania',
-      body: 'Informacje o zasadach odwoływania spotkań oraz oczekiwaniach wobec uczestników.',
-    },
+export const ABOUT = {
+  eyebrow: 'O mnie',
+  title: 'Cześć, jestem Asia',
+  paragraphs: [
+    'Prowadzę te rozmowy, bo lubię ludzi i lubię słuchać. Tyle. Nie jestem terapeutką, coachką ani ekspertką od życia i nie będę udawać, że jestem.',
+    'Nie poprowadzę Cię, nie naprawię i nie powiem, co masz zrobić. Będę po drugiej stronie i będę słuchać. Jak trzeba — dopytam. Jak trzeba — pomilczę.',
+    'Możesz mówić serio, chaotycznie, z humorem albo zacząć od „nie wiem, jak to powiedzieć". To też jest początek.',
   ],
-  link: {
-    label: 'Link do pełnego regulaminu',
-    note: 'Zapoznaj się ze szczegółowymi zasadami współpracy',
-    // TODO: podmień na adres pliku PDF lub podstrony z regulaminem.
-    href: '#regulamin',
-  },
+  note: 'Naprawdę nie musisz się przygotowywać.',
 } as const;
 
-/* ── Kontakt ──────────────────────────────────────────────────────────── */
+/* ── Cennik ───────────────────────────────────────────────────────────── */
 
-export const CONTACT_SECTION = {
-  title: 'Kontakt',
-  subtitle: 'Jesteśmy tu dla Ciebie',
-  imageAlt: 'Jasne wejście z łukowatymi drzwiami, otoczone zielenią w słonecznym świetle',
-  formNote:
-    'Wypełnij formularz — odezwiemy się, aby ustalić dogodny termin. Możesz też zadzwonić lub napisać bezpośrednio.',
+export const PRICING = {
+  eyebrow: 'Cennik',
+  title: 'Ile to kosztuje',
+  lead: 'Płacisz za konkretny czas. Bez pakietów, abonamentów i zapisywania się na cokolwiek dalej.',
+  plans: [
+    {
+      duration: '25 minut',
+      price: '79',
+      currency: 'zł',
+      body: 'Na jedną rzecz. Kiedy chcesz coś powiedzieć na głos i nie potrzebujesz do tego godziny.',
+      featured: false,
+      badge: '',
+    },
+    {
+      duration: '50 minut',
+      price: '129',
+      currency: 'zł',
+      body: 'Na spokojnie. Kiedy temat jest większy albo wiesz, że rozkręcasz się wolniej.',
+      featured: true,
+      badge: 'Najczęściej wybierane',
+    },
+  ],
+  facts: [
+    { icon: 'video', label: 'Rozmowy odbywają się online' },
+    { icon: 'camera', label: 'Kamera opcjonalna — sam dźwięk też jest ok' },
+    { icon: 'calendar', label: 'Odwołanie do 12 godzin przed rozmową — pełny zwrot' },
+  ],
+} as const;
+
+/* ── Umów rozmowę (formularz) ─────────────────────────────────────────── */
+
+export const BOOKING_SECTION = {
+  eyebrow: 'Rezerwacja',
+  title: 'Umów rozmowę',
+  lead: 'Napisz, ile czasu chcesz i kiedy Ci pasuje. Odezwę się i ustalimy termin. Tematu nie musisz opisywać w wiadomości — od tego jest rozmowa.',
 } as const;
 
 /* ── FAQ ──────────────────────────────────────────────────────────────── */
 
 export const FAQ = {
-  title: 'FAQ',
-  subtitle: 'Najczęściej zadawane pytania',
+  eyebrow: 'FAQ',
+  title: 'Pytania, które padają najczęściej',
+  lead: '',
   items: [
     {
       question: 'Czy to terapia?',
       answer:
-        'Nie, nasze spotkania to nie terapia, a przestrzeń do swobodnej rozmowy i wygadania się.',
+        'Nie. To płatna rozmowa 1:1 i nie zastępuje psychoterapii, konsultacji psychologicznej ani psychiatrycznej. Nie stawiam diagnoz i niczego nie leczę.',
     },
     {
-      question: 'Czy rozmowy są poufne?',
+      question: 'O czym mogę rozmawiać?',
       answer:
-        'Tak, gwarantujemy pełną poufność wszystkich naszych rozmów i informacji udostępnionych podczas spotkań.',
+        'O tym, o czym chcesz — od wczorajszej niezręcznej sytuacji po rzecz, która chodzi Ci po głowie od miesięcy. Temat nie musi być poważny.',
     },
     {
-      question: 'Jak długo trwa spotkanie?',
-      answer: 'Standardowe spotkanie trwa 60 minut. Mamy czas na wszystko, co chcesz powiedzieć.',
+      question: 'Czy muszę mieć włączoną kamerę?',
+      answer: 'Nie. Kamera jest opcjonalna — możesz zostać przy samym dźwięku.',
     },
     {
-      question: 'Czy mogę odwołać spotkanie?',
+      question: 'Czy muszę się przygotować?',
       answer:
-        'Tak, prosimy o informację z 24-godzinnym wyprzedzeniem, aby uwolnić termin dla innych.',
+        'Nie. Możesz zacząć dokładnie tam, gdzie jesteś — również od „nie wiem, od czego zacząć".',
+    },
+    {
+      question: 'Ile trwa rozmowa?',
+      answer: 'Do wyboru 25 albo 50 minut. Długość wybierasz przy rezerwacji.',
+    },
+    {
+      question: 'Co, jeśli odwołam termin?',
+      answer:
+        'Do 12 godzin przed rozmową dostajesz pełny zwrot. Przy rezygnacji później niż 12 godzin przed terminem zwrot nie przysługuje.',
+    },
+    {
+      question: 'Czy to, co powiem, zostaje między nami?',
+      answer: 'Tak. Nie nagrywam rozmów i nie opowiadam o nich nikomu.',
     },
   ] satisfies FaqItem[],
+} as const;
+
+/* ── Granice usługi ───────────────────────────────────────────────────── */
+
+export const LIMITS = {
+  eyebrow: 'Granice usługi',
+  title: 'Czego to nie jest',
+  lead: 'Piszę to wprost, bo tak jest uczciwiej — i łatwiej Ci ocenić, czy to w ogóle jest dla Ciebie.',
+  items: [
+    'To nie jest psychoterapia ani konsultacja psychologiczna.',
+    'To nie jest pomoc psychiatryczna ani interwencja kryzysowa.',
+    'To nie jest coaching, mentoring ani doradztwo eksperckie.',
+    'Nie stawiam diagnoz, nie leczę i nie obiecuję, że coś się rozwiąże.',
+  ],
+  crisis: {
+    title: 'Jeśli dzieje się coś poważnego',
+    body: 'Jeżeli Ty albo ktoś obok Ciebie jest w bezpośrednim zagrożeniu życia lub zdrowia, ta rozmowa nie jest właściwym miejscem. Zadzwoń pod numer alarmowy 112 albo skorzystaj z bezpłatnego telefonu wsparcia.',
+    /* TODO: uzupełnić o zweryfikowane, aktualne numery telefonów wsparcia
+       (brief, sekcja 16 — nie wpisujemy ich „na sztywno" bez weryfikacji).
+       Format: { label: 'Kryzysowy Telefon Zaufania', number: '…', href: 'tel:…' } */
+    helplines: [] as { label: string; number: string; href: string }[],
+  },
 } as const;
 
 /* ── Końcowe CTA ──────────────────────────────────────────────────────── */
 
 export const FINAL_CTA = {
-  title: 'Dołącz do nas',
-  subtitle: 'Zacznij rozmowę już dziś',
-  columns: [
-    {
-      title: 'Nie czekaj',
-      body: 'Nie czekaj, aż problemy Cię przytłoczą. Znajdź przestrzeń, by się wygadać i poczuć lepiej.',
-    },
-    {
-      title: 'Twoja przystań',
-      body: '„Prosto w słowa” – Twoja przystań w świecie pełnym zgiełku. Miejsce, gdzie możesz być sobą.',
-    },
-  ],
+  title: 'Masz coś do przegadania?',
+  body: 'Wybierz 25 albo 50 minut i umów termin. Resztę ustalimy już w rozmowie.',
+  note: 'Bez oceniania. Bez naprawiania.',
 } as const;

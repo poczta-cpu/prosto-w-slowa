@@ -12,7 +12,7 @@ import Icon from './ui/Icon.astro';
 ---
 
 <Section id="faq" tone="alt" labelledby="faq-title">
-  <SectionHeading id="faq-title" title={FAQ.title} subtitle={FAQ.subtitle} />
+  <SectionHeading id="faq-title" eyebrow={FAQ.eyebrow} title={FAQ.title} />
 
   <div class="faq container--narrow">
     {
@@ -84,7 +84,7 @@ import Icon from './ui/Icon.astro';
   }
 
   .faq__question:hover {
-    background-color: rgb(82 43 41 / 0.03);
+    background-color: rgb(62 9 10 / 0.03);
   }
 
   .faq__question:focus-visible {

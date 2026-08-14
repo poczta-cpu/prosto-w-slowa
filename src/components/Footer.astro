@@ -1,8 +1,13 @@
 ---
-import { SITE, NAV_LINKS, CONTACT } from '../data/site';
-import { RULES } from '../data/content';
+import { SITE, NAV_LINKS, CONTACT, LEGAL } from '../data/site';
+import Icon from './ui/Icon.astro';
 
 const year = new Date().getFullYear();
+
+const LEGAL_LINKS = [
+  { label: 'Regulamin', href: LEGAL.termsHref },
+  { label: 'Polityka prywatności', href: LEGAL.privacyHref },
+].filter((link) => link.href);
 ---
 
 <footer class="footer">
@@ -12,7 +17,7 @@ const year = new Date().getFullYear();
         <span class="footer__mark" aria-hidden="true"></span>
         {SITE.name}
       </a>
-      <p class="footer__tagline">Twoja przestrzeń do rozmowy.</p>
+      <p class="footer__tagline">Płatne rozmowy 1:1 online. Bez oceniania, bez naprawiania.</p>
     </div>
 
     <nav class="footer__nav" aria-label="Nawigacja w stopce">
@@ -24,19 +29,45 @@ const year = new Date().getFullYear();
             </li>
           ))
         }
-        <li><a href="#kontakt">Kontakt</a></li>
+        <li><a href="#granice">Granice usługi</a></li>
+        <li><a href="#umow">Umów rozmowę</a></li>
       </ul>
     </nav>
 
     <div class="footer__contact">
-      <p>{CONTACT.email}</p>
-      <p>{CONTACT.phone}</p>
+      <a
+        class="footer__channel"
+        href={CONTACT.instagramHref}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="instagram" size={17} />
+        {CONTACT.instagram}
+      </a>
+      {
+        CONTACT.email && (
+          <a class="footer__channel" href={`mailto:${CONTACT.email}`}>
+            <Icon name="mail" size={17} />
+            {CONTACT.email}
+          </a>
+        )
+      }
     </div>
   </div>
 
   <div class="container footer__bar">
-    <p class="footer__copy">© {year} {SITE.name}. Wszelkie prawa zastrzeżone.</p>
-    <a class="footer__legal" href={RULES.link.href}>Regulamin</a>
+    <p class="footer__copy">© {year} {SITE.name}</p>
+    {
+      LEGAL_LINKS.length > 0 && (
+        <ul class="footer__legal">
+          {LEGAL_LINKS.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </div>
 </footer>
 
@@ -67,10 +98,10 @@ const year = new Date().getFullYear();
     align-items: center;
     gap: 0.55rem;
     font-family: var(--font-display);
-    font-size: var(--fs-md);
-    font-weight: 500;
+    font-size: var(--fs-sm);
+    font-weight: 400;
+    letter-spacing: -0.015em;
     text-decoration: none;
-    font-variation-settings: 'SOFT' 40, 'opsz' 24;
   }
 
   .footer__mark {
@@ -81,6 +112,7 @@ const year = new Date().getFullYear();
   }
 
   .footer__tagline {
+    max-width: 32ch;
     margin: var(--space-2xs) 0 0;
     color: var(--c-ink-muted);
     font-size: var(--fs-sm);
@@ -101,20 +133,28 @@ const year = new Date().getFullYear();
   }
 
   .footer__list a:hover {
-    color: var(--c-accent);
+    color: var(--c-link);
     text-decoration: underline;
   }
 
   .footer__contact {
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    color: var(--c-ink-muted);
+    gap: var(--space-2xs);
   }
 
-  .footer__contact p {
-    margin: 0;
+  .footer__channel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--c-ink-muted);
+    text-decoration: none;
     overflow-wrap: anywhere;
+  }
+
+  .footer__channel:hover {
+    color: var(--c-link);
+    text-decoration: underline;
   }
 
   .footer__bar {
@@ -134,12 +174,21 @@ const year = new Date().getFullYear();
   }
 
   .footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .footer__legal a {
     color: var(--c-ink-subtle);
     text-decoration: none;
   }
 
-  .footer__legal:hover {
-    color: var(--c-accent);
+  .footer__legal a:hover {
+    color: var(--c-link);
     text-decoration: underline;
   }
 </style>

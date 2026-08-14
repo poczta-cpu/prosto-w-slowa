@@ -1,76 +1,55 @@
 ---
 import { HOW_IT_WORKS } from '../data/content';
+import { CTA, bookingIsExternal } from '../data/site';
 import Section from './ui/Section.astro';
 import SectionHeading from './ui/SectionHeading.astro';
 import FeatureCard from './ui/FeatureCard.astro';
+import Button from './ui/Button.astro';
 
-/**
- * „Jak to działa” — trzy kroki procesu. Na desktopie łączy je cienka
- * linia prowadząca, która podkreśla sekwencję.
- */
+const externalProps = bookingIsExternal
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
 <Section id="jak-to-dziala" labelledby="jak-to-dziala-title">
   <SectionHeading
     id="jak-to-dziala-title"
+    eyebrow={HOW_IT_WORKS.eyebrow}
     title={HOW_IT_WORKS.title}
-    subtitle={HOW_IT_WORKS.subtitle}
+    lead={HOW_IT_WORKS.lead}
   />
 
-  <ol class="steps grid-cards">
+  <div class="steps">
     {
       HOW_IT_WORKS.steps.map((step, index) => (
-        <li class="steps__item">
-          <FeatureCard
-            icon={step.icon}
-            title={step.title}
-            body={step.body}
-            number={step.number}
-            delay={index * 120}
-          />
-        </li>
+        <FeatureCard
+          icon={step.icon}
+          title={step.title}
+          body={step.body}
+          number={step.number}
+          delay={index * 90}
+        />
       ))
     }
-  </ol>
+  </div>
+
+  <div class="steps__cta" data-reveal="fade" style="--reveal-delay: 380ms">
+    <Button href={CTA.primary.href} variant="primary" size="lg" {...externalProps}>
+      {CTA.primary.label}
+    </Button>
+  </div>
 </Section>
 
 <style>
   .steps {
-    position: relative;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    counter-reset: step;
+    display: grid;
+    gap: clamp(1rem, 0.85rem + 1vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
   }
 
-  .steps__item {
+  .steps__cta {
     display: flex;
-  }
-
-  .steps__item > :global(.card) {
-    width: 100%;
-  }
-
-  /* Linia prowadząca między krokami — tylko tam, gdzie karty stoją w rzędzie */
-  @media (min-width: 58rem) {
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 3.4rem;
-      left: 12%;
-      right: 12%;
-      height: 1px;
-      background: repeating-linear-gradient(
-        90deg,
-        var(--c-line-strong) 0 6px,
-        transparent 6px 14px
-      );
-      z-index: 0;
-    }
-
-    .steps__item {
-      position: relative;
-      z-index: 1;
-    }
+    justify-content: center;
+    margin-top: clamp(2rem, 1.6rem + 2vw, 3rem);
   }
 </style>

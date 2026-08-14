@@ -1,0 +1,193 @@
+---
+import { PRICING } from '../data/content';
+import { CTA, bookingIsExternal } from '../data/site';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import Button from './ui/Button.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * Cennik — dwie czytelne karty z jednoznacznym CTA. Ceny i czasy trzymane
+ * w `src/data/content.ts`, więc zmiana stawki to jedna linijka.
+ */
+
+const externalProps = bookingIsExternal
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
+---
+
+<Section id="cennik" tone="alt" labelledby="cennik-title">
+  <SectionHeading
+    id="cennik-title"
+    eyebrow={PRICING.eyebrow}
+    title={PRICING.title}
+    lead={PRICING.lead}
+  />
+
+  <ul class="plans">
+    {
+      PRICING.plans.map((plan, index) => (
+        <li
+          class:list={['plan', plan.featured && 'plan--featured']}
+          data-reveal
+          style={`--reveal-delay: ${index * 110}ms`}
+        >
+          {plan.badge && <span class="plan__badge">{plan.badge}</span>}
+
+          <h3 class="plan__duration">{plan.duration}</h3>
+
+          <p class="plan__price">
+            <span class="plan__amount">{plan.price}</span>
+            <span class="plan__currency">{plan.currency}</span>
+          </p>
+
+          <p class="plan__body">{plan.body}</p>
+
+          <Button
+            href={CTA.primary.href}
+            variant={plan.featured ? 'primary' : 'secondary'}
+            size="lg"
+            class="plan__cta"
+            {...externalProps}
+          >
+            {CTA.primary.label}
+          </Button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <ul class="pricing-facts" data-reveal="fade" style="--reveal-delay: 260ms">
+    {
+      PRICING.facts.map((fact) => (
+        <li class="pricing-facts__item">
+          <span class="pricing-facts__icon" aria-hidden="true">
+            <Icon name={fact.icon as never} size={18} />
+          </span>
+          {fact.label}
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+
+<style>
+  .plans {
+    display: grid;
+    gap: clamp(1rem, 0.85rem + 1.2vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  .plan {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2xs);
+    padding: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+    background-color: var(--c-surface);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out);
+  }
+
+  .plan:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .plan--featured {
+    border-color: var(--c-burgundy);
+    box-shadow: var(--shadow-md);
+  }
+
+  .plan__badge {
+    align-self: flex-start;
+    margin-bottom: var(--space-3xs);
+    padding: 0.25rem 0.7rem;
+    background-color: var(--c-berry-tint);
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    color: var(--c-berry);
+  }
+
+  .plan__duration {
+    margin: 0;
+    font-size: var(--fs-lg);
+  }
+
+  .plan__price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    margin: 0;
+    color: var(--c-burgundy);
+  }
+
+  .plan__amount {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 2rem + 2.4vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: var(--ls-tight);
+  }
+
+  .plan__currency {
+    font-size: var(--fs-lg);
+    font-weight: 600;
+  }
+
+  .plan__body {
+    max-width: 34ch;
+    margin: var(--space-3xs) 0 var(--space-sm);
+    color: var(--c-ink-muted);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+
+  .plan__cta {
+    margin-top: auto;
+    width: 100%;
+  }
+
+  /* ── Fakty pod cennikiem ────────────────────────────────────────── */
+
+  .pricing-facts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    max-width: 46rem;
+    margin: clamp(1.75rem, 1.5rem + 1.4vw, 2.5rem) auto 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pricing-facts__item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-muted);
+  }
+
+  .pricing-facts__icon {
+    display: grid;
+    place-items: center;
+    color: var(--c-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plan:hover {
+      transform: none;
+    }
+  }
+</style>

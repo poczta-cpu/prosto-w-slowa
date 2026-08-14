@@ -16,7 +16,7 @@ const FIELDS = [
     label: 'Imię',
     type: 'text',
     autocomplete: 'given-name',
-    placeholder: 'Jak mamy się do Ciebie zwracać?',
+    placeholder: 'Jak mam się do Ciebie zwracać?',
     required: true,
   },
   {
@@ -27,15 +27,10 @@ const FIELDS = [
     placeholder: 'twoj@email.pl',
     required: true,
   },
-  {
-    name: 'phone',
-    label: 'Telefon',
-    type: 'tel',
-    autocomplete: 'tel',
-    placeholder: 'Opcjonalnie',
-    required: false,
-  },
 ] as const;
+
+/** Długość rozmowy — pole opcjonalne, bo można się jeszcze nie zdecydować. */
+const DURATIONS = ['25 minut', '50 minut', 'jeszcze nie wiem'] as const;
 ---
 
 <form class="form" data-contact-form novalidate>
@@ -68,6 +63,16 @@ const FIELDS = [
       ))
     }
 
+    <p class="field">
+      <label class="field__label" for="field-duration">
+        Długość rozmowy
+        <span class="field__optional">(opcjonalnie)</span>
+      </label>
+      <select class="field__input field__input--select" id="field-duration" name="duration">
+        {DURATIONS.map((duration) => <option value={duration}>{duration}</option>)}
+      </select>
+    </p>
+
     <p class="field field--full">
       <label class="field__label" for="field-message">
         Wiadomość
@@ -80,7 +85,7 @@ const FIELDS = [
         rows="5"
         required
         minlength="10"
-        placeholder="Napisz kilka słów o tym, z czym chcesz przyjść. Nie musisz wchodzić w szczegóły."
+        placeholder="Napisz, kiedy Ci pasuje. Tematu nie musisz tu opisywać — od tego jest rozmowa."
         aria-describedby="error-message"></textarea>
       <span class="field__error" id="error-message" role="alert"></span>
     </p>
@@ -89,7 +94,7 @@ const FIELDS = [
       <input class="field__checkbox" id="field-consent" name="consent" type="checkbox" required
         aria-describedby="error-consent" />
       <label class="field__consent" for="field-consent">
-        Wyrażam zgodę na przetwarzanie moich danych w celu odpowiedzi na wiadomość.
+        Zgadzam się na przetwarzanie moich danych, żeby Asia mogła odpowiedzieć na tę wiadomość.
         <span class="field__required" aria-hidden="true">*</span>
       </label>
       <span class="field__error" id="error-consent" role="alert"></span>
@@ -193,7 +198,7 @@ const FIELDS = [
   .field__input:focus {
     outline: none;
     border-color: var(--c-accent);
-    box-shadow: 0 0 0 3px rgb(185 102 61 / 0.16);
+    box-shadow: 0 0 0 3px rgb(24 128 187 / 0.18);
   }
 
   .field__input--area {
@@ -202,9 +207,15 @@ const FIELDS = [
     font-family: inherit;
   }
 
+  .field__input--select {
+    /* Wysokość równa polom tekstowym — inaczej rząd się rozjeżdża */
+    min-height: 2.95rem;
+    cursor: pointer;
+  }
+
   .field__input[aria-invalid='true'] {
     border-color: var(--c-error);
-    background-color: rgb(165 63 43 / 0.03);
+    background-color: rgb(163 35 24 / 0.04);
   }
 
   .field__error {
@@ -232,7 +243,7 @@ const FIELDS = [
     width: 1.15rem;
     height: 1.15rem;
     margin: 0.2rem 0 0;
-    accent-color: var(--c-ink);
+    accent-color: var(--c-burgundy);
     cursor: pointer;
   }
 
@@ -295,14 +306,14 @@ const FIELDS = [
 
   .form__status[data-state='success'] {
     color: var(--c-success);
-    background-color: rgb(76 107 69 / 0.08);
-    border-color: rgb(76 107 69 / 0.25);
+    background-color: rgb(46 107 74 / 0.08);
+    border-color: rgb(46 107 74 / 0.25);
   }
 
   .form__status[data-state='error'] {
     color: var(--c-error);
-    background-color: rgb(165 63 43 / 0.06);
-    border-color: rgb(165 63 43 / 0.25);
+    background-color: rgb(163 35 24 / 0.06);
+    border-color: rgb(163 35 24 / 0.25);
   }
 
   .form__status[data-state='info'] {

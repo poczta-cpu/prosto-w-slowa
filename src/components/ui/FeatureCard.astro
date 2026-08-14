@@ -2,8 +2,8 @@
 import Icon from './Icon.astro';
 
 /**
- * Karta z ikoną, tytułem i opisem — używana w sekcjach „O nas”,
- * „Jak to działa” i „Nasza filozofia”.
+ * Karta z ikoną, tytułem i opisem — używana w sekcjach „Jak to działa”
+ * i „Dlaczego płatna rozmowa”.
  */
 interface Props {
   icon: string;
@@ -79,13 +79,12 @@ const { icon, title, body, number, delay = 0 } = Astro.props;
   }
 
   .card__number {
-    font-family: var(--font-display);
+    font-family: var(--font-serif);
     font-size: var(--fs-2xl);
-    font-weight: 300;
+    font-weight: 600;
     line-height: 1;
     color: var(--c-line-strong);
     letter-spacing: var(--ls-tight);
-    font-variation-settings: 'SOFT' 40, 'opsz' 96;
     transition: color var(--dur-base) var(--ease-out);
   }
 

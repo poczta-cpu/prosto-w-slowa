@@ -1,0 +1,77 @@
+---
+import { WHY_PAID } from '../data/content';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * „Dlaczego płatna rozmowa” — jedyna sekcja na burgundzie. Ciemne tło
+ * niesie tu najważniejszy argument sprzedażowy i buduje rozpoznawalność
+ * koloru marki, nie robiąc z całej strony ciemnego motywu.
+ */
+---
+
+<Section id="dlaczego-platna" tone="ink" labelledby="dlaczego-platna-title">
+  <SectionHeading
+    id="dlaczego-platna-title"
+    eyebrow={WHY_PAID.eyebrow}
+    title={WHY_PAID.title}
+    lead={WHY_PAID.lead}
+  />
+
+  <ul class="reasons">
+    {
+      WHY_PAID.items.map((item, index) => (
+        <li class="reason" data-reveal style={`--reveal-delay: ${index * 90}ms`}>
+          <span class="reason__icon" aria-hidden="true">
+            <Icon name={item.icon as never} size={20} />
+          </span>
+          <h3 class="reason__title">{item.title}</h3>
+          <p class="reason__body">{item.body}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+
+<style>
+  .reasons {
+    display: grid;
+    gap: clamp(1.5rem, 1.2rem + 1.6vw, 2.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .reason {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding-top: var(--space-sm);
+    border-top: 1px solid rgb(250 245 238 / 0.18);
+  }
+
+  .reason__icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: var(--space-3xs);
+    color: var(--c-on-ink-accent);
+    background-color: rgb(250 245 238 / 0.08);
+    border-radius: var(--radius-md);
+  }
+
+  .reason__title {
+    margin: 0;
+    color: var(--c-on-ink);
+  }
+
+  .reason__body {
+    margin: 0;
+    color: var(--c-on-ink-muted);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+</style>

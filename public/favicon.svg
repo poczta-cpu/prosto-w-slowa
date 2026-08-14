@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Prosto w słowa">
-  <rect width="64" height="64" rx="14" fill="#F5F1E9"/>
+  <rect width="64" height="64" rx="14" fill="#3E090A"/>
   <path d="M15 24a8 8 0 0 1 8-8h18a8 8 0 0 1 8 8v10a8 8 0 0 1-8 8H29l-9 7v-7h-1a4 4 0 0 1-4-4V24Z"
-        fill="none" stroke="#522B29" stroke-width="4" stroke-linejoin="round"/>
-  <circle cx="41" cy="29" r="3.2" fill="#B9663D"/>
+        fill="none" stroke="#FAF5EE" stroke-width="4" stroke-linejoin="round"/>
+  <circle cx="41" cy="29" r="3.2" fill="#1880BB"/>
 </svg>

@@ -67,9 +67,10 @@ ol[class] {
 /* ── Nagłówki ─────────────────────────────────────────────────────── */
 
 /*
- * H1–H2 (nagłówki sekcji) korzystają z ciepłego serifu Fraunces.
- * H3–H4 (tytuły kart) zostają w Interze — tak jak na stronie źródłowej —
- * dzięki czemu drobniejszy tekst pozostaje neutralny i dobrze czytelny.
+ * Podział krojów zgodnie z briefem:
+ *   H1 i pojedyncze hasła → Archivo Black (klasa .display), oszczędnie;
+ *   H2 (nagłówki sekcji)  → Cormorant Garamond, redakcyjnie;
+ *   H3–H4 (tytuły kart)   → Inter, żeby drobniejszy tekst został czytelny.
  */
 h1,
 h2,
@@ -79,21 +80,23 @@ h4 {
 }
 
 h1,
-h2 {
+.display {
   font-family: var(--font-display);
   font-weight: 400;
-  line-height: var(--lh-tight);
-  letter-spacing: var(--ls-tight);
-  /* opsz: wyższa wartość = smuklejsze, bardziej eleganckie kroje dla dużych stopni */
-  font-variation-settings: 'SOFT' 40, 'WONK' 0, 'opsz' 96;
-}
-
-h1 {
   font-size: var(--fs-4xl);
+  line-height: var(--lh-tight);
+  /* Archivo Black domyślnie „rozpycha” wersaliki — ściągamy tracking */
+  letter-spacing: var(--ls-tight);
 }
 
 h2 {
-  font-size: var(--fs-3xl);
+  font-family: var(--font-serif);
+  /* Cormorant ma niską wysokość x — ten sam stopień wygląda mniej
+     niż w Interze, więc skalujemy go w górę. */
+  font-size: calc(var(--fs-3xl) * 1.18);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
 }
 
 h3,
@@ -117,6 +120,17 @@ p {
   text-wrap: pretty;
 }
 
+/* Odręczny dopisek — wyłącznie krótkie frazy, nigdy treść.
+   Caveat jest wąski i lekki, więc dostaje własny stopień i kolor. */
+.hand {
+  font-family: var(--font-hand);
+  font-weight: 500;
+  font-size: calc(var(--fs-lg) * 1.15);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--c-berry);
+}
+
 /* ── Linki ────────────────────────────────────────────────────────── */
 
 a {
@@ -127,7 +141,7 @@ a {
 }
 
 a:hover {
-  color: var(--c-accent);
+  color: var(--c-link);
 }
 
 /* ── Focus ────────────────────────────────────────────────────────── */
@@ -146,7 +160,7 @@ a:hover {
 /* ── Zaznaczenie tekstu ───────────────────────────────────────────── */
 
 ::selection {
-  background-color: var(--c-accent-soft);
+  background-color: var(--c-peach);
   color: var(--c-ink);
 }
 

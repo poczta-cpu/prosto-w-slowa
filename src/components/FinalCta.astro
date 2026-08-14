@@ -1,39 +1,39 @@
 ---
 import { FINAL_CTA } from '../data/content';
-import { CTA } from '../data/site';
+import { CTA, bookingIsExternal } from '../data/site';
 import Section from './ui/Section.astro';
-import SectionHeading from './ui/SectionHeading.astro';
 import Button from './ui/Button.astro';
 
 /**
- * Zamknięcie strony — sekcja na ciemnym tle, kontrastująca z resztą
- * i domykająca ścieżkę użytkownika przyciskami CTA.
+ * Zamknięcie strony: jedno zdanie, jeden przycisk. Nagłówek w Archivo Black —
+ * to jedno z dwóch miejsc na stronie, gdzie ten krój dostaje głos.
  */
+
+const externalProps = bookingIsExternal
+  ? { target: '_blank', rel: 'noopener noreferrer' }
+  : {};
 ---
 
-<Section id="dolacz" tone="ink" labelledby="dolacz-title" class="cta">
+<Section id="przegadajmy" tone="ink" labelledby="final-cta-title" class="cta">
   <span class="cta__halo" aria-hidden="true"></span>
 
-  <SectionHeading id="dolacz-title" title={FINAL_CTA.title} subtitle={FINAL_CTA.subtitle} />
+  <div class="cta__inner">
+    <h2 class="display cta__title" id="final-cta-title" data-reveal>{FINAL_CTA.title}</h2>
 
-  <div class="cta__columns">
-    {
-      FINAL_CTA.columns.map((column, index) => (
-        <div class="cta__column" data-reveal style={`--reveal-delay: ${index * 120}ms`}>
-          <h3 class="cta__column-title">{column.title}</h3>
-          <p class="cta__column-body">{column.body}</p>
-        </div>
-      ))
-    }
-  </div>
+    <p class="cta__body" data-reveal style="--reveal-delay: 100ms">{FINAL_CTA.body}</p>
 
-  <div class="cta__actions" data-reveal="fade" style="--reveal-delay: 260ms">
-    <Button href={CTA.primary.href} variant="inverse" size="lg">
-      {CTA.primary.label}
-    </Button>
-    <Button href={CTA.secondary.href} variant="inverse-outline" size="lg">
-      {CTA.secondary.label}
-    </Button>
+    <div class="cta__actions" data-reveal="fade" style="--reveal-delay: 200ms">
+      <Button href={CTA.primary.href} variant="inverse" size="lg" {...externalProps}>
+        {CTA.primary.label}
+      </Button>
+      <Button href={CTA.pricing.href} variant="inverse-outline" size="lg">
+        {CTA.pricing.label}
+      </Button>
+    </div>
+
+    <p class="hand cta__note" data-reveal="fade" style="--reveal-delay: 300ms">
+      {FINAL_CTA.note}
+    </p>
   </div>
 </Section>
 
@@ -46,12 +46,12 @@ import Button from './ui/Button.astro';
 
   .cta__halo {
     position: absolute;
-    top: -40%;
+    top: -45%;
     left: 50%;
     width: min(60rem, 130%);
     aspect-ratio: 1;
     translate: -50% 0;
-    background: radial-gradient(circle at center, rgb(185 102 61 / 0.28) 0%, transparent 62%);
+    background: radial-gradient(circle at center, rgb(138 26 45 / 0.4) 0%, transparent 62%);
     pointer-events: none;
   }
 
@@ -59,24 +59,24 @@ import Button from './ui/Button.astro';
     position: relative;
   }
 
-  .cta__columns {
-    display: grid;
-    gap: clamp(1.5rem, 1.2rem + 2vw, 3rem);
-    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
-    max-width: var(--container-narrow);
-    margin-inline: auto;
+  .cta__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
   }
 
-  .cta__column-title {
-    margin: 0 0 var(--space-2xs);
+  .cta__title {
+    max-width: 16ch;
+    margin: 0;
     color: var(--c-on-ink);
   }
 
-  .cta__column-body {
-    max-width: var(--measure);
-    margin: 0 auto;
-    color: rgb(247 243 236 / 0.78);
-    font-size: var(--fs-sm);
+  .cta__body {
+    max-width: var(--measure-narrow);
+    margin: 0;
+    color: var(--c-on-ink-muted);
+    font-size: var(--fs-md);
     line-height: var(--lh-relaxed);
   }
 
@@ -85,7 +85,11 @@ import Button from './ui/Button.astro';
     flex-wrap: wrap;
     justify-content: center;
     gap: var(--space-xs);
-    margin-top: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+    margin-top: var(--space-2xs);
   }
 
+  .cta__note {
+    margin: var(--space-2xs) 0 0;
+    color: var(--c-peach);
+  }
 </style>

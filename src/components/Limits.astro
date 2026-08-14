@@ -1,0 +1,148 @@
+---
+import { LIMITS } from '../data/content';
+import Section from './ui/Section.astro';
+import SectionHeading from './ui/SectionHeading.astro';
+import Icon from './ui/Icon.astro';
+
+/**
+ * Granice usługi. Stoją blisko końca strony celowo: najpierw tłumaczymy
+ * własną kategorię, dopiero potem odgraniczamy ją od terapii i coachingu.
+ * Informacja kryzysowa jest dyskretna, ale łatwa do znalezienia.
+ */
+---
+
+<Section id="granice" labelledby="granice-title">
+  <SectionHeading
+    id="granice-title"
+    eyebrow={LIMITS.eyebrow}
+    title={LIMITS.title}
+    lead={LIMITS.lead}
+  />
+
+  <div class="limits">
+    <ul class="limits__list">
+      {
+        LIMITS.items.map((item, index) => (
+          <li class="limit" data-reveal style={`--reveal-delay: ${index * 70}ms`}>
+            <span class="limit__mark" aria-hidden="true" />
+            {item}
+          </li>
+        ))
+      }
+    </ul>
+
+    <aside class="crisis" data-reveal="left" style="--reveal-delay: 120ms">
+      <h3 class="crisis__title">
+        <span class="crisis__icon" aria-hidden="true"><Icon name="alert" size={20} /></span>
+        {LIMITS.crisis.title}
+      </h3>
+      <p class="crisis__body">{LIMITS.crisis.body}</p>
+
+      {
+        LIMITS.crisis.helplines.length > 0 && (
+          <ul class="crisis__lines">
+            {LIMITS.crisis.helplines.map((line) => (
+              <li>
+                <a href={line.href}>{line.number}</a> — {line.label}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </aside>
+  </div>
+</Section>
+
+<style>
+  .limits {
+    display: grid;
+    gap: clamp(1.5rem, 1.2rem + 2.4vw, 3rem);
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+
+  .limits__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .limit {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.75rem;
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--c-line);
+    color: var(--c-ink-muted);
+    line-height: var(--lh-normal);
+  }
+
+  .limit:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .limit__mark {
+    width: 1.1rem;
+    height: 2px;
+    margin-top: 0.85em;
+    border-radius: 2px;
+    background-color: var(--c-line-strong);
+  }
+
+  /* ── Informacja kryzysowa ───────────────────────────────────────── */
+
+  .crisis {
+    padding: clamp(1.25rem, 1rem + 1.2vw, 2rem);
+    background-color: var(--c-berry-tint);
+    border: 1px solid rgb(138 26 45 / 0.2);
+    border-radius: var(--radius-lg);
+  }
+
+  .crisis__title {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0 0 var(--space-2xs);
+    font-size: var(--fs-md);
+    color: var(--c-berry);
+  }
+
+  .crisis__icon {
+    display: grid;
+    place-items: center;
+  }
+
+  .crisis__body {
+    margin: 0;
+    color: var(--c-ink-muted);
+    font-size: var(--fs-sm);
+    line-height: var(--lh-relaxed);
+  }
+
+  .crisis__lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    margin: var(--space-sm) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--fs-sm);
+    color: var(--c-ink-muted);
+  }
+
+  .crisis__lines a {
+    color: var(--c-berry);
+    font-weight: 600;
+  }
+
+  @media (min-width: 56rem) {
+    .limits {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    }
+  }
+</style>
