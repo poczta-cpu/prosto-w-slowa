@@ -1,12 +1,13 @@
 ---
+import { Image } from 'astro:assets';
+import portret from '../assets/asia-o-mnie.jpg';
 import { ABOUT } from '../data/content';
-import { SITE } from '../data/site';
 import Section from './ui/Section.astro';
 import SectionHeading from './ui/SectionHeading.astro';
 
 /**
  * „O mnie” — krótko i osobiście, bez budowania autorytetu, którego
- * usługa nie ma. Prawa kolumna czeka na drugie naturalne zdjęcie Asi.
+ * usługa nie ma. Zdjęcie z bliska, cytat pod spodem zamiast podpisu.
  */
 ---
 
@@ -29,11 +30,16 @@ import SectionHeading from './ui/SectionHeading.astro';
     </div>
 
     <div class="about__media" data-reveal="left" style="--reveal-delay: 140ms">
-      {/* TODO: podmienić na <Image> ze zdjęciem Asi do sekcji „O mnie”. */}
-      <figure class="frame" role="img" aria-label={`${SITE.host} — osoba prowadząca rozmowy`}>
-        <blockquote class="frame__quote">
-          Czasem nie chodzi o radę. Chodzi o to, żeby powiedzieć to na głos.
-        </blockquote>
+      <figure class="frame">
+        <Image
+          src={portret}
+          alt={ABOUT.imageAlt}
+          widths={[360, 560, 760]}
+          sizes="(min-width: 56rem) 24rem, 92vw"
+          loading="lazy"
+          class="frame__image"
+        />
+        <figcaption class="frame__quote">{ABOUT.quote}</figcaption>
       </figure>
     </div>
   </div>
@@ -62,37 +68,46 @@ import SectionHeading from './ui/SectionHeading.astro';
     margin: var(--space-sm) 0 0;
   }
 
-  /* ── Kadr / cytat ───────────────────────────────────────────────── */
+  /* ── Zdjęcie i cytat ────────────────────────────────────────────── */
 
   .frame {
-    display: grid;
-    place-content: center;
-    margin: 0;
-    padding: clamp(1.75rem, 1.4rem + 2vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+
+  .frame__image {
+    width: 100%;
+    height: auto;
     aspect-ratio: 1;
-    background:
-      radial-gradient(circle at 72% 18%, rgb(255 255 255 / 0.5), transparent 55%),
-      linear-gradient(200deg, var(--c-peach-soft) 0%, var(--c-peach) 100%);
-    border: 1px solid var(--c-line-strong);
+    object-fit: cover;
     border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
   }
 
   .frame__quote {
     margin: 0;
+    padding-left: var(--space-sm);
+    border-left: 3px solid var(--c-accent-soft);
     font-family: var(--font-serif);
-    font-size: clamp(1.5rem, 1.15rem + 1.6vw, 2.25rem);
+    font-size: clamp(1.375rem, 1.1rem + 1.2vw, 1.875rem);
     font-weight: 500;
     font-style: italic;
     line-height: 1.25;
     letter-spacing: -0.01em;
     color: var(--c-burgundy);
-    text-align: center;
     text-wrap: balance;
   }
 
   @media (min-width: 56rem) {
     .about {
       grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+
+    .frame {
+      margin-inline: 0 0;
     }
   }
 </style>

@@ -32,9 +32,9 @@ export const HERO = {
     { icon: 'wallet', label: '79 zł albo 129 zł' },
     { icon: 'camera', label: 'Kamera opcjonalna' },
   ],
-  /* TODO: naturalne zdjęcie Asi do hero (brief, sekcja 21). Do tego czasu
-     miejsce zajmuje ramka z inicjałem — nie wstawiamy zdjęć stockowych. */
-  portraitAlt: 'Asia — osoba prowadząca rozmowy',
+  portraitAlt:
+    'Asia siedzi w jasnym pokoju przy oknie i trzyma w dłoniach kubek, patrzy w obiektyw',
+  portraitCaption: 'prowadzę te rozmowy',
 } as const;
 
 /* ── Może znasz ten moment ────────────────────────────────────────────── */
@@ -156,6 +156,8 @@ export const ABOUT = {
     'Możesz mówić serio, chaotycznie, z humorem albo zacząć od „nie wiem, jak to powiedzieć". To też jest początek.',
   ],
   note: 'Naprawdę nie musisz się przygotowywać.',
+  imageAlt: 'Asia patrzy w obiektyw — portret z bliska, w domowym wnętrzu',
+  quote: 'Czasem nie chodzi o radę. Chodzi o to, żeby powiedzieć to na głos.',
 } as const;
 
 /* ── Cennik ───────────────────────────────────────────────────────────── */

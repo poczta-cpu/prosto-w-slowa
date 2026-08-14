@@ -7,9 +7,10 @@
  * Uruchomienie: `node scripts/generate-social-assets.mjs`
  * Skrypt korzysta z `sharp`, który jest już zależnością Astro.
  *
- * Grafika jest w całości rysowana — nie używamy zdjęć stockowych.
- * Kroje marki (Archivo Black, Cormorant Garamond) nie są dostępne dla
- * renderera SVG, więc sięgamy po najbliższe systemowe odpowiedniki.
+ * Podgląd składa się z rysowanego tła marki i zdjęcia Asi z hero — tego
+ * samego, które widać po wejściu na stronę. Kroje marki (Archivo Black,
+ * Cormorant Garamond) nie są dostępne dla renderera SVG, więc sięgamy
+ * po najbliższe systemowe odpowiedniki.
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -51,30 +52,35 @@ const og = Buffer.from(`
   <text x="100" y="101" font-family="${DISPLAY}" font-size="24" fill="${BURGUNDY}">Prosto w słowa</text>
 
   <!-- hasło -->
-  <text x="76" y="252" font-family="${DISPLAY}" font-size="74" fill="${BURGUNDY}">Masz coś</text>
-  <text x="76" y="336" font-family="${DISPLAY}" font-size="74" fill="${BURGUNDY}">do przegadania?</text>
+  <text x="76" y="244" font-family="${DISPLAY}" font-size="66" fill="${BURGUNDY}">Masz coś</text>
+  <text x="76" y="318" font-family="${DISPLAY}" font-size="66" fill="${BURGUNDY}">do przegadania?</text>
 
   <!-- podtytuł -->
-  <text x="76" y="404" font-family="${BODY}" font-size="26" fill="${MUTED}">Rozmowa 1:1 online. 25 albo 50 minut,</text>
-  <text x="76" y="442" font-family="${BODY}" font-size="26" fill="${MUTED}">w których nie musisz uzasadniać tematu.</text>
+  <text x="76" y="382" font-family="${BODY}" font-size="25" fill="${MUTED}">Rozmowa 1:1 online z Asią. 25 albo 50 minut,</text>
+  <text x="76" y="418" font-family="${BODY}" font-size="25" fill="${MUTED}">w których nie musisz uzasadniać tematu.</text>
 
   <!-- odręczny dopisek -->
-  <text x="76" y="512" font-family="${SERIF}" font-size="30" font-style="italic" fill="${BERRY}">Bez oceniania. Bez naprawiania.</text>
+  <text x="76" y="486" font-family="${SERIF}" font-size="29" font-style="italic" fill="${BERRY}">Bez oceniania. Bez naprawiania.</text>
 
   <!-- cena -->
-  <rect x="76" y="546" width="196" height="46" rx="23" fill="${BURGUNDY}"/>
-  <text x="102" y="577" font-family="${BODY}" font-size="21" fill="${CREAM}">25 min — 79 zł</text>
-  <rect x="288" y="546" width="204" height="46" rx="23" fill="${BURGUNDY}"/>
-  <text x="314" y="577" font-family="${BODY}" font-size="21" fill="${CREAM}">50 min — 129 zł</text>
+  <rect x="76" y="522" width="196" height="46" rx="23" fill="${BURGUNDY}"/>
+  <text x="102" y="553" font-family="${BODY}" font-size="21" fill="${CREAM}">25 min — 79 zł</text>
+  <rect x="288" y="522" width="204" height="46" rx="23" fill="${BURGUNDY}"/>
+  <text x="314" y="553" font-family="${BODY}" font-size="21" fill="${CREAM}">50 min — 129 zł</text>
 
-  <!-- dymek po prawej -->
-  <g transform="translate(830 150)" fill="none" stroke="${BURGUNDY}" stroke-width="9" stroke-linejoin="round">
-    <path d="M10 60a56 56 0 0 1 56-56h140a56 56 0 0 1 56 56v70a56 56 0 0 1-56 56H108l-63 49v-49h-7a28 28 0 0 1-28-28V60Z"/>
-  </g>
-  <circle cx="1000" cy="245" r="14" fill="${BLUE}"/>
+  <!-- cienka linia domykająca kadr od strony zdjęcia -->
+  <rect x="756" y="0" width="4" height="630" fill="${PEACH}"/>
 </svg>`);
 
-await sharp(og).png().toFile(path.join(publicDir, 'og-image.png'));
+// Zdjęcie po prawej — ten sam kadr, który stoi w hero
+const photo = await sharp(path.join(root, 'src', 'assets', 'asia-hero.jpg'))
+  .resize(440, 630, { fit: 'cover', position: 'centre' })
+  .toBuffer();
+
+await sharp(og)
+  .composite([{ input: photo, left: 760, top: 0 }])
+  .png()
+  .toFile(path.join(publicDir, 'og-image.png'));
 
 /* ── Ikona iOS ────────────────────────────────────────────────────── */
 

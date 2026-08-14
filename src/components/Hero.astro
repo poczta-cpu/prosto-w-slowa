@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+import portret from '../assets/asia-hero.jpg';
 import { HERO } from '../data/content';
-import { CTA, SITE, bookingIsExternal } from '../data/site';
+import { CTA, bookingIsExternal } from '../data/site';
 import Button from './ui/Button.astro';
 import Icon from './ui/Icon.astro';
 
@@ -9,9 +11,8 @@ import Icon from './ui/Icon.astro';
  * i co zrobić dalej — dlatego cena, czas i „kamera opcjonalna” stoją
  * bezpośrednio pod przyciskami, a nie dopiero w cenniku.
  *
- * Prawa kolumna to miejsce na naturalne zdjęcie Asi (brief, sekcja 21).
- * Dopóki go nie ma, stoi tam kadr z palety marki — świadomie zaprojektowany,
- * a nie zdjęcie stockowe.
+ * Zdjęcie ładuje się z `loading="eager"` i wysokim priorytetem, bo jest
+ * największym elementem pierwszego ekranu (liczy się do LCP).
  */
 
 const externalProps = bookingIsExternal
@@ -58,10 +59,17 @@ const externalProps = bookingIsExternal
     </div>
 
     <div class="hero__media" data-reveal="scale" style="--reveal-delay: 240ms">
-      {/* TODO: podmienić na <Image> z naturalnym zdjęciem Asi. */}
-      <figure class="portrait" role="img" aria-label={HERO.portraitAlt}>
-        <span class="portrait__name">{SITE.host}</span>
-        <figcaption class="hand portrait__caption">prowadzę te rozmowy</figcaption>
+      <figure class="portrait">
+        <Image
+          src={portret}
+          alt={HERO.portraitAlt}
+          widths={[420, 640, 900]}
+          sizes="(min-width: 56rem) 26rem, 92vw"
+          loading="eager"
+          fetchpriority="high"
+          class="portrait__image"
+        />
+        <figcaption class="hand portrait__caption">{HERO.portraitCaption}</figcaption>
       </figure>
     </div>
   </div>
@@ -183,19 +191,19 @@ const externalProps = bookingIsExternal
 
   .portrait {
     position: relative;
-    display: grid;
-    place-content: center;
-    gap: var(--space-2xs);
     margin: 0;
-    aspect-ratio: 4 / 5;
-    background:
-      radial-gradient(circle at 30% 22%, rgb(255 255 255 / 0.55), transparent 55%),
-      linear-gradient(160deg, var(--c-peach) 0%, var(--c-peach-soft) 100%);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-lg);
-    text-align: center;
     /* Delikatne unoszenie się kadru — powolne i ledwo zauważalne */
     animation: hero-float 9s var(--ease-soft) infinite alternate;
+  }
+
+  .portrait__image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: inherit;
+    box-shadow: var(--shadow-lg);
   }
 
   .portrait::after {
@@ -207,17 +215,20 @@ const externalProps = bookingIsExternal
     pointer-events: none;
   }
 
-  .portrait__name {
-    font-family: var(--font-serif);
-    font-size: clamp(3rem, 2rem + 6vw, 5rem);
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--c-burgundy);
-  }
-
+  /* Odręczny dopisek jak naklejka wpięta w róg zdjęcia */
   .portrait__caption {
-    font-size: var(--fs-lg);
+    position: absolute;
+    z-index: 1;
+    left: clamp(-0.75rem, -0.5rem - 1vw, -1.5rem);
+    bottom: 1.25rem;
+    padding: 0.4rem 1rem;
+    background-color: var(--c-cream);
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-sm);
+    font-size: var(--fs-md);
+    white-space: nowrap;
+    rotate: -3deg;
   }
 
   @keyframes hero-float {

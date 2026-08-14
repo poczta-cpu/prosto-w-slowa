@@ -25,18 +25,18 @@ Thumbs.db
 .idea/
 .vscode/
 
-# notatki robocze — repozytorium jest publiczne, te pliki zostają lokalnie
+# ── Materiały robocze ─────────────────────────────────────────────────
+# Repozytorium jest publiczne. Wszystko, co przychodzi od klienta i wszystko,
+# co jest notatką roboczą, trzymamy w `privet/` — jeden katalog, jedna reguła.
+# Tam też lądują nowe pliki: brief, zdjęcia (`privet/FOTO/`), dokumenty.
+privet/
+
+# CLAUDE.md musi zostać w katalogu głównym, bo stamtąd czyta go Claude Code
 CLAUDE.md
-README.md
-prompt.txt
 *.notatki.md
 
-# materiały od klienta — mogą zawierać dane wrażliwe, nigdy nie trafiają na GitHuba
+# Zabezpieczenie na wypadek wrzucenia materiałów poza `privet/`
 brief*
 *.docx
 *.doc
 *.pdf
-
-# surowe zdjęcia od klienta — do repozytorium trafiają dopiero wybrane,
-# przycięte i zoptymalizowane kadry w src/assets/
-FOTO/
