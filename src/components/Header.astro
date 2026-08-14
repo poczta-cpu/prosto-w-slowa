@@ -69,7 +69,9 @@ import Icon from './ui/Icon.astro';
   }
 
   .header.is-scrolled {
-    background-color: rgb(250 245 238 / 0.88);
+    /* Wysoka nieprzezroczystość jest potrzebna: pod nagłówek wjeżdżają
+       też sekcje burgundowe, a przy niższej wartości tekst przez nie prześwituje. */
+    background-color: rgb(250 245 238 / 0.96);
     backdrop-filter: blur(12px) saturate(1.1);
     -webkit-backdrop-filter: blur(12px) saturate(1.1);
     border-bottom-color: var(--c-line);

@@ -108,11 +108,16 @@ const externalProps = bookingIsExternal
     box-shadow: var(--shadow-md);
   }
 
+  /* Plakietka wisi na krawędzi karty, poza układem — inaczej spychałaby
+     cenę w dół i obie karty przestawałyby się zgadzać w poziomie. */
   .plan__badge {
-    align-self: flex-start;
-    margin-bottom: var(--space-3xs);
-    padding: 0.25rem 0.7rem;
+    position: absolute;
+    top: 0;
+    right: clamp(1.5rem, 1.25rem + 1.2vw, 2.25rem);
+    translate: 0 -50%;
+    padding: 0.3rem 0.75rem;
     background-color: var(--c-berry-tint);
+    border: 1px solid rgb(138 26 45 / 0.2);
     border-radius: var(--radius-pill);
     font-size: var(--fs-xs);
     font-weight: 600;
